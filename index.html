@@ -7,6 +7,12 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="theme-color" content="#000000">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-title" content="HK Transit">
+    <meta name="application-name" content="HK Transit">
+    <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'%3E%3Crect width='180' height='180' rx='40' fill='%230A84FF'/%3E%3Crect x='25' y='70' width='100' height='55' rx='12' fill='%23fff'/%3E%3Crect x='35' y='80' width='30' height='25' rx='5' fill='%230A84FF'/%3E%3Crect x='75' y='80' width='30' height='25' rx='5' fill='%230A84FF'/%3E%3Ccircle cx='50' cy='130' r='12' fill='%231C1C1E'/%3E%3Ccircle cx='100' cy='130' r='12' fill='%231C1C1E'/%3E%3Ccircle cx='140' cy='50' r='18' fill='%23E60012'/%3E%3Ctext x='140' y='56' text-anchor='middle' font-size='18' font-weight='700' fill='%23fff' font-family='system-ui'%3EM%3C/text%3E%3C/svg%3E">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 72 72'%3E%3Crect width='72' height='72' rx='16' fill='%230A84FF'/%3E%3Crect x='10' y='28' width='40' height='22' rx='5' fill='%23fff'/%3E%3Ccircle cx='20' cy='52' r='5' fill='%231C1C1E'/%3E%3Ccircle cx='40' cy='52' r='5' fill='%231C1C1E'/%3E%3Ccircle cx='56' cy='20' r='7' fill='%23E60012'/%3E%3C/svg%3E">
+    <link rel="manifest" href="data:application/manifest+json;charset=utf-8,%7B%22name%22%3A%22HK%20Transit%20Express%22%2C%22short_name%22%3A%22HK%20Transit%22%2C%22description%22%3A%22Hong%20Kong%20public%20transport%20ETA%20and%20routes%22%2C%22start_url%22%3A%22.%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%23000000%22%2C%22theme_color%22%3A%22%23000000%22%2C%22orientation%22%3A%22portrait-primary%22%2C%22icons%22%3A%5B%7B%22src%22%3A%22data%3Aimage%2Fsvg%2Bxml%2C%253Csvg%2520xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%2520viewBox%3D%270%200%20192%20192%27%253E%253Crect%2520width%3D%27192%27%2520height%3D%27192%27%2520rx%3D%2740%27%2520fill%3D%27%25230A84FF%27%252F%253E%253Crect%2520x%3D%2726%27%2520y%3D%2774%27%2520width%3D%27108%27%2520height%3D%2758%27%2520rx%3D%2712%27%2520fill%3D%27%2523fff%27%252F%253E%253Ccircle%2520cx%3D%2752%27%2520cy%3D%27138%27%2520r%3D%2713%27%2520fill%3D%27%25231C1C1E%27%252F%253E%253Ccircle%2520cx%3D%27108%27%2520cy%3D%27138%27%2520r%3D%2713%27%2520fill%3D%27%25231C1C1E%27%252F%253E%253Ccircle%2520cx%3D%27148%27%2520cy%3D%2752%27%2520r%3D%2720%27%2520fill%3D%27%2523E60012%27%252F%253E%253C%252Fsvg%253E%22%2C%22sizes%22%3A%22192x192%22%2C%22type%22%3A%22image%2Fsvg%2Bxml%22%2C%22purpose%22%3A%22any%20maskable%22%7D%2C%7B%22src%22%3A%22data%3Aimage%2Fsvg%2Bxml%2C%253Csvg%2520xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%2520viewBox%3D%270%200%20512%20512%27%253E%253Crect%2520width%3D%27512%27%2520height%3D%27512%27%2520rx%3D%27100%27%2520fill%3D%27%25230A84FF%27%252F%253E%253Crect%2520x%3D%2770%27%2520y%3D%27200%27%2520width%3D%27280%27%2520height%3D%27150%27%2520rx%3D%2730%27%2520fill%3D%27%2523fff%27%252F%253E%253Ccircle%2520cx%3D%27140%27%2520cy%3D%27370%27%2520r%3D%2735%27%2520fill%3D%27%25231C1C1E%27%252F%253E%253Ccircle%2520cx%3D%27280%27%2520cy%3D%27370%27%2520r%3D%2735%27%2520fill%3D%27%25231C1C1E%27%252F%253E%253Ccircle%2520cx%3D%27390%27%2520cy%3D%27140%27%2520r%3D%2750%27%2520fill%3D%27%2523E60012%27%252F%253E%253C%252Fsvg%253E%22%2C%22sizes%22%3A%22512x512%22%2C%22type%22%3A%22image%2Fsvg%2Bxml%22%2C%22purpose%22%3A%22any%20maskable%22%7D%5D%7D">
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -72,13 +78,35 @@
         .sheet-modal {
             transition: transform 0.3s cubic-bezier(0.32, 0.72, 0, 1), opacity 0.25s ease;
         }
+        /* Centered modal on all screen sizes (including mobile) */
+        #route-modal, #station-modal {
+            left: 50% !important;
+            right: auto !important;
+            bottom: auto !important;
+            top: 50% !important;
+            transform: translate(-50%, -50%) !important;
+            max-width: min(520px, 92vw) !important;
+            width: min(520px, 92vw) !important;
+            max-height: 88vh !important;
+            border-radius: 1.5rem !important;
+            border: 1px solid rgba(255,255,255,0.1) !important;
+            box-shadow: 0 25px 80px rgba(0,0,0,0.55) !important;
+        }
+        #route-modal.sheet-hidden, #station-modal.sheet-hidden {
+            transform: translate(-50%, -46%) scale(0.96) !important;
+            opacity: 0 !important;
+            pointer-events: none !important;
+        }
+        #route-modal.sheet-visible, #station-modal.sheet-visible {
+            transform: translate(-50%, -50%) scale(1) !important;
+            opacity: 1 !important;
+            pointer-events: auto !important;
+        }
         .sheet-hidden {
-            transform: translateY(100%);
             opacity: 0;
             pointer-events: none;
         }
         .sheet-visible {
-            transform: translateY(0);
             opacity: 1;
             pointer-events: auto;
         }
@@ -187,81 +215,191 @@
         .route-badge { min-width: 52px; text-align: center; }
 
         /* Desktop only — mobile unchanged */
+        /* ========== DESKTOP REDESIGN (≥768px) ========== */
         @media (min-width: 768px) {
-            body { padding-bottom: 0 !important; }
+            body {
+                padding-bottom: 0 !important;
+                background: #0a0a0c !important;
+            }
+            body.theme-light {
+                background: #F2F2F7 !important;
+            }
+
+            /* Wider content canvas */
             header > div.max-w-md,
             main.max-w-md,
-            nav.glass-nav > div.max-w-md { max-width: 1100px !important; }
-            main.max-w-md {
-                padding: 1.25rem 1.5rem 2rem !important;
-                margin-left: 88px !important;
-                width: calc(100% - 88px) !important;
-                max-width: 1188px !important;
+            nav.glass-nav > div.max-w-md {
+                max-width: 1280px !important;
             }
-            header.sticky { padding-left: calc(88px + 1.5rem) !important; padding-right: 1.5rem !important; }
+            main.max-w-md {
+                padding: 1.5rem 2rem 2.5rem !important;
+                margin-left: 96px !important;
+                width: calc(100% - 96px) !important;
+                max-width: 1360px !important;
+            }
+            header.sticky {
+                padding-left: calc(96px + 2rem) !important;
+                padding-right: 2rem !important;
+            }
+            header .max-w-md {
+                max-width: 1280px !important;
+            }
+
+            /* Left rail navigation */
             nav.glass-nav {
                 position: fixed !important;
                 top: 0 !important; left: 0 !important; bottom: 0 !important; right: auto !important;
-                width: 88px !important;
+                width: 96px !important;
                 border-top: none !important;
-                border-right: 0.5px solid rgba(255,255,255,0.1) !important;
-                padding: 5.5rem 0.5rem 1.5rem !important;
+                border-right: 0.5px solid rgba(255,255,255,0.08) !important;
+                padding: 6rem 0.6rem 1.75rem !important;
                 display: flex !important;
                 flex-direction: column !important;
                 z-index: 45 !important;
+                background: rgba(18, 18, 20, 0.92) !important;
+                backdrop-filter: blur(28px) saturate(180%);
+                -webkit-backdrop-filter: blur(28px) saturate(180%);
+            }
+            body.theme-light nav.glass-nav {
+                background: rgba(255,255,255,0.94) !important;
+                border-right-color: rgba(0,0,0,0.08) !important;
             }
             nav.glass-nav > div.max-w-md {
-                max-width: none !important; width: 100% !important; margin: 0 !important;
-                flex-direction: column !important; justify-content: flex-start !important;
-                align-items: stretch !important; gap: 0.35rem !important; height: 100% !important;
+                max-width: none !important;
+                width: 100% !important;
+                margin: 0 !important;
+                flex-direction: column !important;
+                justify-content: flex-start !important;
+                align-items: stretch !important;
+                gap: 0.4rem !important;
+                height: 100% !important;
             }
             nav.glass-nav button {
-                flex-direction: column !important; padding: 0.75rem 0.35rem !important;
-                border-radius: 0.85rem !important; width: 100% !important;
+                flex-direction: column !important;
+                padding: 0.85rem 0.4rem !important;
+                border-radius: 1rem !important;
+                width: 100% !important;
+                transition: background 0.15s ease, color 0.15s ease;
             }
+            nav.glass-nav button:hover {
+                background: rgba(255,255,255,0.06);
+            }
+            body.theme-light nav.glass-nav button:hover {
+                background: rgba(0,0,0,0.04);
+            }
+            nav.glass-nav button i {
+                font-size: 1.25rem !important;
+            }
+            nav.glass-nav button span {
+                font-size: 10px !important;
+                margin-top: 0.35rem !important;
+                letter-spacing: 0.02em;
+            }
+
+            /* Home dashboard: search full width, then 2-col fav | nearby */
             #tab-home {
                 display: grid !important;
-                grid-template-columns: 1fr 1fr;
-                gap: 1.25rem 1.5rem;
+                grid-template-columns: 1.15fr 0.85fr;
+                gap: 1.5rem 1.75rem;
                 align-items: start;
             }
-            #tab-home > .relative { grid-column: 1 / -1; }
-            #home-fav-block { grid-column: 1; }
-            #home-nearby-block { grid-column: 2; }
-            main.max-w-md > section { min-height: calc(100vh - 5.5rem); }
-            #bus-routes-list, #mtr-routes-list, #favorites-container {
+            #tab-home > .relative {
+                grid-column: 1 / -1;
+                max-width: 640px;
+            }
+            #home-fav-block {
+                grid-column: 1;
+            }
+            #home-nearby-block {
+                grid-column: 2;
+                position: sticky;
+                top: 5.5rem;
+            }
+            #home-fav-block h2,
+            #home-nearby-block h2 {
+                font-size: 1.05rem !important;
+            }
+            #favorites-container {
+                display: grid !important;
+                grid-template-columns: 1fr !important;
+                gap: 0.75rem !important;
+            }
+            #favorites-container > div {
+                padding: 1rem 1.1rem !important;
+            }
+
+            main.max-w-md > section {
+                min-height: calc(100vh - 5.5rem);
+            }
+
+            /* Bus / MTR lists — card grid */
+            #bus-routes-list,
+            #mtr-routes-list {
                 display: grid !important;
                 grid-template-columns: repeat(2, minmax(0, 1fr));
-                gap: 0.75rem;
+                gap: 0.85rem;
             }
+            #bus-routes-list > div,
+            #mtr-routes-list > div {
+                padding: 0.95rem 1rem !important;
+                transition: transform 0.12s ease, box-shadow 0.15s ease;
+            }
+            #bus-routes-list > div:hover,
+            #mtr-routes-list > div:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 8px 28px rgba(0,0,0,0.35);
+            }
+
+            /* Games side-by-side */
             #tab-games {
                 display: grid !important;
                 grid-template-columns: 1fr 1fr;
-                gap: 1.25rem;
+                gap: 1.5rem;
                 align-items: start;
             }
-            #tab-games > h2, #tab-games > p, #tab-games > .flex.p-1,
-            #tab-games > .text-center { grid-column: 1 / -1; }
-            #route-modal, #station-modal {
-                left: 50% !important; right: auto !important; bottom: auto !important; top: 50% !important;
-                transform: translate(-50%, -50%) !important;
-                max-width: 520px !important; width: min(520px, 92vw) !important;
-                max-height: 88vh !important; border-radius: 1.5rem !important;
-                border: 1px solid rgba(255,255,255,0.1) !important;
-                box-shadow: 0 25px 80px rgba(0,0,0,0.55) !important;
+            #tab-games > h2,
+            #tab-games > p,
+            #tab-games > .flex.p-1,
+            #tab-games > .text-center {
+                grid-column: 1 / -1;
             }
-            #route-modal.sheet-hidden, #station-modal.sheet-hidden {
-                transform: translate(-50%, -46%) scale(0.96) !important;
-                opacity: 0 !important; pointer-events: none !important;
+
+            /* Settings wider card */
+            #tab-settings .glass-card {
+                max-width: 720px;
             }
-            #route-modal.sheet-visible, #station-modal.sheet-visible {
-                transform: translate(-50%, -50%) scale(1) !important;
-                opacity: 1 !important; pointer-events: auto !important;
+
+            /* Search input a bit larger on desktop */
+            #route-search-input,
+            #bus-search-input {
+                padding-top: 0.85rem !important;
+                padding-bottom: 0.85rem !important;
+                font-size: 0.95rem !important;
+            }
+
+            /* modals already centered globally */
+        }
+
+        @media (min-width: 1100px) {
+            #bus-routes-list,
+            #mtr-routes-list {
+                grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+            }
+            #favorites-container {
+                grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+            }
+            #tab-home {
+                grid-template-columns: 1.25fr 0.85fr !important;
             }
         }
-        @media (min-width: 1100px) {
-            #bus-routes-list, #mtr-routes-list {
-                grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+
+        @media (min-width: 1400px) {
+            main.max-w-md {
+                max-width: 1480px !important;
+            }
+            #bus-routes-list,
+            #mtr-routes-list {
+                grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
             }
         }
     </style>
@@ -441,7 +579,7 @@
                     <div id="brand-color-list" class="space-y-2.5"></div>
                 </div>
 
-                <div id="settings-install-block" class="hidden">
+                <div id="settings-install-block">
                     <div id="lbl-settings-install" class="text-xs font-bold text-iosGray uppercase mb-2">加至主畫面</div>
                     <button type="button" onclick="triggerPWAInstall()" class="w-full py-3 rounded-2xl bg-iosBlue text-white text-sm font-bold active-scale flex items-center justify-center gap-2">
                         <i class="fa-solid fa-mobile-screen-button"></i>
@@ -559,7 +697,7 @@
     <!-- MODAL 1: ROUTE & ETA SHEET -->
     <div id="route-modal-backdrop" onclick="closeRouteModal(true)" class="fixed inset-0 bg-black/60 backdrop-blur-xs z-50 opacity-0 pointer-events-none transition-opacity duration-300"></div>
     
-    <div id="route-modal" class="sheet-modal sheet-hidden fixed bottom-0 left-0 right-0 z-50 max-w-md mx-auto bg-iosGray6 rounded-t-[32px] shadow-2xl overflow-hidden max-h-[85vh] flex flex-col border-t border-white/10">
+    <div id="route-modal" class="sheet-modal sheet-hidden fixed z-50 bg-iosGray6 rounded-[24px] shadow-2xl overflow-hidden max-h-[85vh] flex flex-col border border-white/10">
         <div class="w-full flex justify-between items-center px-4 pt-3 pb-2 border-b border-white/5">
             <button onclick="closeRouteModal(true)" class="flex items-center space-x-1 text-iosBlue font-semibold text-xs active:opacity-60 transition">
                 <i class="fa-solid fa-chevron-left text-sm"></i>
@@ -625,7 +763,7 @@
     <!-- MODAL 2: STATION POP-UP -->
     <div id="station-modal-backdrop" onclick="closeStationModal(true)" class="fixed inset-0 bg-black/60 backdrop-blur-xs z-50 opacity-0 pointer-events-none transition-opacity duration-300"></div>
     
-    <div id="station-modal" class="sheet-modal sheet-hidden fixed bottom-0 left-0 right-0 z-50 max-w-md mx-auto bg-iosGray6 rounded-t-[32px] shadow-2xl overflow-hidden max-h-[85vh] flex flex-col border-t border-white/10">
+    <div id="station-modal" class="sheet-modal sheet-hidden fixed z-50 bg-iosGray6 rounded-[24px] shadow-2xl overflow-hidden max-h-[85vh] flex flex-col border border-white/10">
         <div class="w-full flex justify-between items-center px-4 pt-3 pb-2 border-b border-white/5">
             <span class="text-xs font-bold text-iosGray uppercase">Station Overview</span>
             <div class="w-10 h-1 bg-iosGray3 rounded-full cursor-pointer" onclick="closeStationModal(true)"></div>
@@ -1514,10 +1652,39 @@
                    document.referrer.includes('android-app://');
         }
 
+        // Minimal service worker so the app meets installability criteria (HTTPS + SW + manifest)
+        function registerMinimalServiceWorker() {
+            if (!('serviceWorker' in navigator)) return;
+            try {
+                const swCode = `
+                    self.addEventListener('install', (e) => { self.skipWaiting(); });
+                    self.addEventListener('activate', (e) => { e.waitUntil(self.clients.claim()); });
+                    self.addEventListener('fetch', (e) => {
+                        // Network-first; fall back to cache only for same-origin navigations if offline
+                        e.respondWith(
+                            fetch(e.request).catch(() => caches.match(e.request).then(r => r || caches.match('./')))
+                        );
+                    });
+                `;
+                const blob = new Blob([swCode], { type: 'application/javascript' });
+                const swUrl = URL.createObjectURL(blob);
+                navigator.serviceWorker.register(swUrl, { scope: './' }).then(() => {
+                    console.log('[HK Transit] Service worker registered');
+                }).catch(err => {
+                    console.log('[HK Transit] SW register failed (file:// or restricted scope):', err);
+                });
+            } catch (e) {
+                console.log('[HK Transit] SW setup error', e);
+            }
+        }
+
         window.addEventListener('beforeinstallprompt', (e) => {
             e.preventDefault();
             deferredPrompt = e;
             refreshSettingsInstallVisibility();
+            // Auto-reveal install block when browser is ready to install
+            const block = document.getElementById('settings-install-block');
+            if (block) block.classList.remove('hidden');
         });
 
         window.addEventListener('appinstalled', () => {
@@ -1535,18 +1702,26 @@
                     deferredPrompt = null;
                 });
             } else {
-                // Fallback instructions for iOS Safari / browsers without beforeinstallprompt
-                const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+                const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) ||
+                    (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+                const isEn = (typeof currentLang !== 'undefined' && String(currentLang).startsWith('en'));
                 if (isIOS) {
-                    alert(currentLang === 'en'
-                        ? "To install: Tap the Share button (□↑), then choose 'Add to Home Screen'."
-                        : "如需安裝：請點擊瀏覽器底部「分享」按鈕 (□↑)，然後選擇「加至主畫面」。");
+                    alert(isEn
+                        ? "To install on iPhone/iPad:\n1. Tap the Share button (□↑) at the bottom\n2. Scroll and choose «Add to Home Screen»\n3. Tap Add"
+                        : "iPhone／iPad 安裝方法：\n1. 撳瀏覽器底部「分享」掣 (□↑)\n2. 向下搵「加至主畫面」\n3. 撳「加入」");
                 } else {
-                    alert(currentLang === 'en'
-                        ? "To install: Use your browser menu → 'Install app' or 'Add to Home Screen'."
-                        : "如需安裝：請打開瀏覽器選單 → 選擇「安裝應用程式」或「加至主畫面」。");
+                    alert(isEn
+                        ? "To install:\n• Chrome/Edge: menu (⋮) → «Install app» or «Add to Home screen»\n• Or look for the install icon in the address bar\n\nNote: Install works best when the page is served over HTTPS."
+                        : "安裝方法：\n• Chrome／Edge：選單 (⋮) →「安裝應用程式」或「加至主畫面」\n• 或者睇網址列有無安裝圖示\n\n註：需以 HTTPS 開啟先可以安裝。");
                 }
             }
+        }
+
+        // Register SW early
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', registerMinimalServiceWorker);
+        } else {
+            registerMinimalServiceWorker();
         }
 
         /* ==========================================================================
@@ -1579,74 +1754,297 @@
         function requestGeolocation() {
             const statusEl = document.getElementById('nearby-status');
             const container = document.getElementById('nearby-stops-container');
+            if (!statusEl || !container) return;
             statusEl.className = "text-xs text-iosGray mb-2";
-            statusEl.innerText = currentLang === 'en' ? "Accessing GPS..." : "正在讀取 GPS 定位...";
+            statusEl.innerText = (typeof currentLang !== 'undefined' && String(currentLang).startsWith('en'))
+                ? "Accessing GPS..."
+                : "正在讀取 GPS 定位...";
             container.innerHTML = "";
 
             if (!navigator.geolocation) {
                 statusEl.className = "text-xs text-iosRed mb-2";
-                statusEl.innerText = currentLang === 'en'
+                statusEl.innerText = (typeof currentLang !== 'undefined' && String(currentLang).startsWith('en'))
                     ? "Error: This device does not support GPS."
                     : "錯誤：此裝置不支援 GPS 定位。";
                 container.innerHTML = `<div class="p-3 rounded-2xl bg-iosRed/10 border border-iosRed/30 text-xs text-iosRed text-center">無法取得附近車站</div>`;
                 return;
             }
 
+            // Prefer high accuracy; allow a reasonable timeout and accept a slightly older fix
+            const geoOpts = {
+                enableHighAccuracy: true,
+                timeout: 15000,
+                maximumAge: 60000
+            };
+
             navigator.geolocation.getCurrentPosition(
                 (pos) => {
-                    const { latitude, longitude } = pos.coords;
+                    const { latitude, longitude, accuracy } = pos.coords;
                     statusEl.className = "text-xs text-iosGreen mb-2";
-                    statusEl.innerText = currentLang === 'en'
-                        ? `GPS OK: ${latitude.toFixed(4)}, ${longitude.toFixed(4)}`
-                        : `GPS 成功：${latitude.toFixed(4)}, ${longitude.toFixed(4)}`;
+                    const accTxt = (accuracy != null && isFinite(accuracy))
+                        ? ` · ±${Math.round(accuracy)}m`
+                        : '';
+                    statusEl.innerText = (typeof currentLang !== 'undefined' && String(currentLang).startsWith('en'))
+                        ? `GPS OK: ${latitude.toFixed(5)}, ${longitude.toFixed(5)}${accTxt}`
+                        : `GPS 成功：${latitude.toFixed(5)}, ${longitude.toFixed(5)}${accTxt}`;
                     renderNearbyStops(true, latitude, longitude);
                 },
                 (err) => {
                     statusEl.className = "text-xs text-iosRed mb-2";
+                    const isEn = (typeof currentLang !== 'undefined' && String(currentLang).startsWith('en'));
                     let msg;
-                    if (currentLang === 'en') {
-                        if (err && err.code === 1) msg = "Error: Location permission denied. Enable location access and try again.";
-                        else if (err && err.code === 2) msg = "Error: Position unavailable. Check GPS / network.";
-                        else if (err && err.code === 3) msg = "Error: GPS timeout. Try again in an open area.";
-                        else msg = "Error: Unable to get GPS location.";
+                    if (isEn) {
+                        if (err && err.code === 1) msg = "Location permission denied. Please allow location access in browser / system settings, then tap 定位 again.";
+                        else if (err && err.code === 2) msg = "Position unavailable. Check GPS / network and try outdoors.";
+                        else if (err && err.code === 3) msg = "GPS timeout. Move to an open area and try again.";
+                        else msg = "Unable to get GPS location.";
                     } else {
-                        if (err && err.code === 1) msg = "錯誤：定位權限被拒絕。請開啟位置權限後再試。";
-                        else if (err && err.code === 2) msg = "錯誤：無法取得位置。請檢查 GPS / 網絡。";
-                        else if (err && err.code === 3) msg = "錯誤：GPS 逾時。請到較空曠地方再試。";
-                        else msg = "錯誤：無法取得 GPS 定位。";
+                        if (err && err.code === 1) msg = "定位權限被拒絕。請喺瀏覽器／系統設定開啟位置權限，再撳「定位」。";
+                        else if (err && err.code === 2) msg = "無法取得位置。請檢查 GPS／網絡，並到較空曠地方再試。";
+                        else if (err && err.code === 3) msg = "GPS 逾時。請到較空曠地方再試。";
+                        else msg = "無法取得 GPS 定位。";
                     }
                     statusEl.innerText = msg;
-                    container.innerHTML = `<div class="p-3 rounded-2xl bg-iosRed/10 border border-iosRed/30 text-xs text-iosRed text-center">${currentLang === 'en' ? 'Nearby stops unavailable without GPS' : '未有 GPS，無法顯示附近車站'}</div>`;
+                    // Still show major hubs without distance ranking
+                    renderNearbyStops(false, null, null);
                 },
-                { timeout: 8000, enableHighAccuracy: true, maximumAge: 30000 }
+                geoOpts
             );
         }
 
+        // Haversine distance in metres
+        function haversineMetres(lat1, lon1, lat2, lon2) {
+            const R = 6371000;
+            const toRad = d => d * Math.PI / 180;
+            const dLat = toRad(lat2 - lat1);
+            const dLon = toRad(lon2 - lon1);
+            const a = Math.sin(dLat/2)**2 + Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) * Math.sin(dLon/2)**2;
+            return 2 * R * Math.asin(Math.sqrt(a));
+        }
+
+        // MTR stations + major bus termini / intermediate stops (WGS84 approx)
+        const NEARBY_MTR = [
+            { name: "金鐘站", lines: ["港島綫","荃灣綫","東鐵綫"], lat: 22.2783, lng: 114.1645 },
+            { name: "中環站", lines: ["港島綫","荃灣綫","東涌綫"], lat: 22.2819, lng: 114.1580 },
+            { name: "香港站", lines: ["東涌綫","機場快綫"], lat: 22.2849, lng: 114.1582 },
+            { name: "尖沙咀站", lines: ["荃灣綫"], lat: 22.2975, lng: 114.1722 },
+            { name: "尖東站", lines: ["屯馬綫"], lat: 22.2951, lng: 114.1750 },
+            { name: "佐敦站", lines: ["荃灣綫"], lat: 22.3048, lng: 114.1717 },
+            { name: "油麻地站", lines: ["荃灣綫","觀塘綫"], lat: 22.3132, lng: 114.1706 },
+            { name: "旺角站", lines: ["荃灣綫","觀塘綫"], lat: 22.3193, lng: 114.1694 },
+            { name: "太子站", lines: ["荃灣綫","觀塘綫"], lat: 22.3246, lng: 114.1683 },
+            { name: "深水埗站", lines: ["荃灣綫"], lat: 22.3307, lng: 114.1628 },
+            { name: "美孚站", lines: ["荃灣綫","屯馬綫"], lat: 22.3375, lng: 114.1380 },
+            { name: "荔景站", lines: ["荃灣綫"], lat: 22.3483, lng: 114.1262 },
+            { name: "葵芳站", lines: ["荃灣綫"], lat: 22.3569, lng: 114.1277 },
+            { name: "荃灣站", lines: ["荃灣綫"], lat: 22.3735, lng: 114.1175 },
+            { name: "灣仔站", lines: ["港島綫"], lat: 22.2778, lng: 114.1731 },
+            { name: "銅鑼灣站", lines: ["港島綫"], lat: 22.2800, lng: 114.1850 },
+            { name: "天后站", lines: ["港島綫"], lat: 22.2828, lng: 114.1919 },
+            { name: "北角站", lines: ["港島綫","將軍澳綫"], lat: 22.2910, lng: 114.2005 },
+            { name: "鰂魚涌站", lines: ["港島綫","將軍澳綫"], lat: 22.2875, lng: 114.2095 },
+            { name: "太古站", lines: ["港島綫"], lat: 22.2847, lng: 114.2165 },
+            { name: "西灣河站", lines: ["港島綫"], lat: 22.2819, lng: 114.2225 },
+            { name: "筲箕灣站", lines: ["港島綫"], lat: 22.2792, lng: 114.2288 },
+            { name: "柴灣站", lines: ["港島綫"], lat: 22.2645, lng: 114.2370 },
+            { name: "堅尼地城站", lines: ["港島綫"], lat: 22.2812, lng: 114.1285 },
+            { name: "香港大學站", lines: ["港島綫"], lat: 22.2840, lng: 114.1350 },
+            { name: "西營盤站", lines: ["港島綫"], lat: 22.2855, lng: 114.1425 },
+            { name: "上環站", lines: ["港島綫"], lat: 22.2865, lng: 114.1520 },
+            { name: "黃埔站", lines: ["觀塘綫"], lat: 22.3050, lng: 114.1895 },
+            { name: "何文田站", lines: ["觀塘綫","屯馬綫"], lat: 22.3135, lng: 114.1830 },
+            { name: "石硤尾站", lines: ["觀塘綫"], lat: 22.3320, lng: 114.1688 },
+            { name: "九龍塘站", lines: ["東鐵綫","觀塘綫"], lat: 22.3370, lng: 114.1760 },
+            { name: "樂富站", lines: ["觀塘綫"], lat: 22.3382, lng: 114.1875 },
+            { name: "黃大仙站", lines: ["觀塘綫"], lat: 22.3415, lng: 114.1940 },
+            { name: "鑽石山站", lines: ["觀塘綫","屯馬綫"], lat: 22.3400, lng: 114.2015 },
+            { name: "彩虹站", lines: ["觀塘綫"], lat: 22.3350, lng: 114.2085 },
+            { name: "九龍灣站", lines: ["觀塘綫"], lat: 22.3235, lng: 114.2140 },
+            { name: "牛頭角站", lines: ["觀塘綫"], lat: 22.3155, lng: 114.2190 },
+            { name: "觀塘站", lines: ["觀塘綫"], lat: 22.3120, lng: 114.2265 },
+            { name: "藍田站", lines: ["觀塘綫"], lat: 22.3065, lng: 114.2330 },
+            { name: "油塘站", lines: ["觀塘綫","將軍澳綫"], lat: 22.2975, lng: 114.2370 },
+            { name: "調景嶺站", lines: ["將軍澳綫","觀塘綫"], lat: 22.3040, lng: 114.2525 },
+            { name: "將軍澳站", lines: ["將軍澳綫"], lat: 22.3075, lng: 114.2600 },
+            { name: "坑口站", lines: ["將軍澳綫"], lat: 22.3155, lng: 114.2645 },
+            { name: "寶琳站", lines: ["將軍澳綫"], lat: 22.3230, lng: 114.2575 },
+            { name: "康城站", lines: ["將軍澳綫"], lat: 22.2955, lng: 114.2695 },
+            { name: "紅磡站", lines: ["東鐵綫","屯馬綫"], lat: 22.3030, lng: 114.1815 },
+            { name: "旺角東站", lines: ["東鐵綫"], lat: 22.3220, lng: 114.1725 },
+            { name: "大圍站", lines: ["東鐵綫","屯馬綫"], lat: 22.3730, lng: 114.1785 },
+            { name: "沙田站", lines: ["東鐵綫"], lat: 22.3820, lng: 114.1875 },
+            { name: "火炭站", lines: ["東鐵綫"], lat: 22.3950, lng: 114.1980 },
+            { name: "大學站", lines: ["東鐵綫"], lat: 22.4135, lng: 114.2100 },
+            { name: "大埔墟站", lines: ["東鐵綫"], lat: 22.4495, lng: 114.1705 },
+            { name: "太和站", lines: ["東鐵綫"], lat: 22.4510, lng: 114.1620 },
+            { name: "粉嶺站", lines: ["東鐵綫"], lat: 22.4920, lng: 114.1385 },
+            { name: "上水站", lines: ["東鐵綫"], lat: 22.5010, lng: 114.1280 },
+            { name: "羅湖站", lines: ["東鐵綫"], lat: 22.5280, lng: 114.1135 },
+            { name: "落馬洲站", lines: ["東鐵綫"], lat: 22.5085, lng: 114.0760 },
+            { name: "會展站", lines: ["東鐵綫"], lat: 22.2815, lng: 114.1755 },
+            { name: "南昌站", lines: ["東涌綫","屯馬綫"], lat: 22.3265, lng: 114.1535 },
+            { name: "奧運站", lines: ["東涌綫"], lat: 22.3175, lng: 114.1605 },
+            { name: "九龍站", lines: ["東涌綫","機場快綫"], lat: 22.3045, lng: 114.1615 },
+            { name: "青衣站", lines: ["東涌綫","機場快綫"], lat: 22.3585, lng: 114.1075 },
+            { name: "東涌站", lines: ["東涌綫"], lat: 22.2895, lng: 113.9410 },
+            { name: "機場站", lines: ["機場快綫"], lat: 22.3160, lng: 113.9365 },
+            { name: "博覽館站", lines: ["機場快綫"], lat: 22.3215, lng: 113.9440 },
+            { name: "欣澳站", lines: ["東涌綫","迪士尼綫"], lat: 22.3320, lng: 114.0295 },
+            { name: "迪士尼站", lines: ["迪士尼綫"], lat: 22.3155, lng: 114.0450 },
+            { name: "柯士甸站", lines: ["屯馬綫"], lat: 22.3040, lng: 114.1665 },
+            { name: "荃灣西站", lines: ["屯馬綫"], lat: 22.3685, lng: 114.1100 },
+            { name: "錦上路站", lines: ["屯馬綫"], lat: 22.4345, lng: 114.0655 },
+            { name: "元朗站", lines: ["屯馬綫","輕鐵"], lat: 22.4460, lng: 114.0350 },
+            { name: "朗屏站", lines: ["屯馬綫"], lat: 22.4475, lng: 114.0255 },
+            { name: "天水圍站", lines: ["屯馬綫","輕鐵"], lat: 22.4480, lng: 114.0045 },
+            { name: "兆康站", lines: ["屯馬綫","輕鐵"], lat: 22.4120, lng: 113.9785 },
+            { name: "屯門站", lines: ["屯馬綫","輕鐵"], lat: 22.3950, lng: 113.9730 },
+            { name: "烏溪沙站", lines: ["屯馬綫"], lat: 22.4290, lng: 114.2440 },
+            { name: "馬鞍山站", lines: ["屯馬綫"], lat: 22.4245, lng: 114.2315 },
+            { name: "恆安站", lines: ["屯馬綫"], lat: 22.4175, lng: 114.2260 },
+            { name: "大水坑站", lines: ["屯馬綫"], lat: 22.4085, lng: 114.2210 },
+            { name: "石門站", lines: ["屯馬綫"], lat: 22.3875, lng: 114.2085 },
+            { name: "第一城站", lines: ["屯馬綫"], lat: 22.3830, lng: 114.2035 },
+            { name: "沙田圍站", lines: ["屯馬綫"], lat: 22.3795, lng: 114.1950 },
+            { name: "車公廟站", lines: ["屯馬綫"], lat: 22.3750, lng: 114.1860 },
+            { name: "顯徑站", lines: ["屯馬綫"], lat: 22.3645, lng: 114.1705 },
+            { name: "啟德站", lines: ["屯馬綫"], lat: 22.3305, lng: 114.1990 },
+            { name: "宋皇臺站", lines: ["屯馬綫"], lat: 22.3235, lng: 114.1910 },
+            { name: "土瓜灣站", lines: ["屯馬綫"], lat: 22.3170, lng: 114.1875 },
+            { name: "海怡半島站", lines: ["南港島綫"], lat: 22.2430, lng: 114.1490 },
+            { name: "利東站", lines: ["南港島綫"], lat: 22.2420, lng: 114.1560 },
+            { name: "黃竹坑站", lines: ["南港島綫"], lat: 22.2480, lng: 114.1680 },
+            { name: "海洋公園站", lines: ["南港島綫"], lat: 22.2485, lng: 114.1745 }
+        ];
+
+        // Major bus termini & intermediate stops (name + sample routes)
+        const NEARBY_BUS = [
+            { name: "尖沙咀碼頭", kind: "總站", routes: ["1A","2","6","7","8","9","234X"], lat: 22.2940, lng: 114.1685 },
+            { name: "中環碼頭", kind: "總站", routes: ["1","5B","15","629","780"], lat: 22.2870, lng: 114.1605 },
+            { name: "中環（交易廣場）", kind: "總站", routes: ["6","6A","6X","15","260"], lat: 22.2835, lng: 114.1588 },
+            { name: "金鐘（東）巴士總站", kind: "總站", routes: ["10","18","720","722"], lat: 22.2795, lng: 114.1655 },
+            { name: "灣仔北臨時巴士總站", kind: "總站", routes: ["2A","2X","8","8P","720"], lat: 22.2825, lng: 114.1750 },
+            { name: "銅鑼灣（摩頓台）", kind: "總站", routes: ["5B","8X","19","25","72"], lat: 22.2790, lng: 114.1885 },
+            { name: "北角碼頭", kind: "總站", routes: ["10","18","27","38","41A","42"], lat: 22.2930, lng: 114.2000 },
+            { name: "筲箕灣巴士總站", kind: "總站", routes: ["2","9","14","77","99"], lat: 22.2790, lng: 114.2295 },
+            { name: "柴灣（東）巴士總站", kind: "總站", routes: ["8X","82","82X","106","118"], lat: 22.2640, lng: 114.2390 },
+            { name: "觀塘碼頭", kind: "總站", routes: ["11B","11C","11D","13D","14"], lat: 22.3100, lng: 114.2260 },
+            { name: "觀塘（裕民坊）", kind: "中途／總站", routes: ["1A","13M","14B","89","98A"], lat: 22.3125, lng: 114.2250 },
+            { name: "九龍灣商貿區", kind: "中途站", routes: ["15A","28B","74A","224X"], lat: 22.3210, lng: 114.2120 },
+            { name: "鑽石山站公共運輸交匯處", kind: "總站", routes: ["2F","3C","19","74X","80"], lat: 22.3405, lng: 114.2020 },
+            { name: "黃大仙巴士總站", kind: "總站", routes: ["2F","3C","5C","11C","75X"], lat: 22.3420, lng: 114.1945 },
+            { name: "九龍城碼頭", kind: "總站", routes: ["5C","5D","12A","21","106"], lat: 22.3175, lng: 114.1900 },
+            { name: "紅磡車站公共運輸交匯處", kind: "總站", routes: ["8","11K","21","85X","268B"], lat: 22.3035, lng: 114.1820 },
+            { name: "尖沙咀東（麼地道）", kind: "總站", routes: ["5","5A","8","8A","26","28"], lat: 22.2970, lng: 114.1770 },
+            { name: "佐敦（渡船街）", kind: "中途／總站", routes: ["2E","12","14","20A","203C"], lat: 22.3055, lng: 114.1675 },
+            { name: "旺角（柏景灣）", kind: "總站", routes: ["12A","18","41A","63X","93K"], lat: 22.3180, lng: 114.1615 },
+            { name: "太子站（太子道西）", kind: "中途站", routes: ["1A","6","6C","36B","81"], lat: 22.3245, lng: 114.1685 },
+            { name: "深水埗（欽州街）", kind: "中途／總站", routes: ["2A","6","6A","12","112"], lat: 22.3310, lng: 114.1610 },
+            { name: "美孚巴士總站", kind: "總站", routes: ["2A","6C","30X","42C","68X"], lat: 22.3370, lng: 114.1390 },
+            { name: "葵芳站巴士總站", kind: "總站", routes: ["30","31M","32M","36M","43M"], lat: 22.3570, lng: 114.1280 },
+            { name: "荃灣（愉景新城）", kind: "總站", routes: ["30X","39A","39M","48X","73X"], lat: 22.3730, lng: 114.1125 },
+            { name: "荃灣西站公共運輸交匯處", kind: "總站", routes: ["34M","39A","238M","243M"], lat: 22.3680, lng: 114.1105 },
+            { name: "沙田市中心巴士總站", kind: "總站", routes: ["48X","72","80K","81K","85K","88K"], lat: 22.3825, lng: 114.1880 },
+            { name: "大圍站公共運輸交匯處", kind: "總站", routes: ["46X","72A","80X","81C","85B"], lat: 22.3735, lng: 114.1790 },
+            { name: "馬鞍山市中心", kind: "總站", routes: ["40X","85M","86K","87D","89D"], lat: 22.4240, lng: 114.2305 },
+            { name: "將軍澳（寶琳）", kind: "總站", routes: ["93A","98A","98C","296M","798"], lat: 22.3235, lng: 114.2570 },
+            { name: "將軍澳站公共運輸交匯處", kind: "總站", routes: ["91M","98B","296A","792M"], lat: 22.3070, lng: 114.2605 },
+            { name: "調景嶺站公共運輸交匯處", kind: "總站", routes: ["91M","98B","290X","792M"], lat: 22.3035, lng: 114.2520 },
+            { name: "東涌市中心巴士總站", kind: "總站", routes: ["3M","11","23","37","38","E11"], lat: 22.2890, lng: 113.9415 },
+            { name: "機場（地面運輸中心）", kind: "總站", routes: ["A11","A21","A22","A29","E11","E21"], lat: 22.3155, lng: 113.9350 },
+            { name: "元朗（西）巴士總站", kind: "總站", routes: ["53","54","64K","68M","76K","968"], lat: 22.4445, lng: 114.0280 },
+            { name: "元朗站公共運輸交匯處", kind: "總站", routes: ["68E","68F","76K","268B","968"], lat: 22.4465, lng: 114.0355 },
+            { name: "天水圍市中心", kind: "總站", routes: ["69M","265B","269B","269C","276A"], lat: 22.4585, lng: 114.0020 },
+            { name: "天水圍站公共運輸交匯處", kind: "總站", routes: ["69X","265M","269D","276"], lat: 22.4485, lng: 114.0050 },
+            { name: "屯門市中心巴士總站", kind: "總站", routes: ["60M","61M","62X","259D","260X"], lat: 22.3910, lng: 113.9760 },
+            { name: "屯門站公共運輸交匯處", kind: "總站", routes: ["60M","61X","62X","259D"], lat: 22.3955, lng: 113.9735 },
+            { name: "上水巴士總站", kind: "總站", routes: ["70K","73K","76K","77K","261","270A"], lat: 22.5020, lng: 114.1285 },
+            { name: "粉嶺站巴士總站", kind: "總站", routes: ["70K","73B","78K","278X"], lat: 22.4925, lng: 114.1390 },
+            { name: "大埔中心巴士總站", kind: "總站", routes: ["71K","72","73A","74X","75X"], lat: 22.4515, lng: 114.1700 },
+            { name: "海怡半島巴士總站", kind: "總站", routes: ["90B","91","94A","97","171"], lat: 22.2435, lng: 114.1495 },
+            { name: "黃竹坑巴士總站", kind: "總站", routes: ["4","37B","48","70","71","72A"], lat: 22.2485, lng: 114.1685 },
+            { name: "數碼港巴士總站", kind: "總站", routes: ["30X","42C","73","970"], lat: 22.2615, lng: 114.1300 },
+            { name: "西環（堅尼地城）", kind: "中途／總站", routes: ["1","5B","10","18","101"], lat: 22.2815, lng: 114.1290 },
+            { name: "西九龍站巴士總站", kind: "總站", routes: ["12","20A","36B","42A","60X"], lat: 22.3040, lng: 114.1650 }
+        ];
+
         function renderNearbyStops(hasGps, lat, lng) {
             const container = document.getElementById('nearby-stops-container');
-            if (!hasGps) {
-                container.innerHTML = `<div class="p-3 rounded-2xl bg-iosRed/10 border border-iosRed/30 text-xs text-iosRed text-center">${currentLang === 'en' ? 'Nearby stops unavailable without GPS' : '未有 GPS，無法顯示附近車站'}</div>`;
+            if (!container) return;
+            const isEn = (typeof currentLang !== 'undefined' && String(currentLang).startsWith('en'));
+
+            let mtrList = NEARBY_MTR.slice();
+            let busList = NEARBY_BUS.slice();
+
+            if (hasGps && lat != null && lng != null && isFinite(lat) && isFinite(lng)) {
+                mtrList = mtrList.map(s => ({ ...s, dist: haversineMetres(lat, lng, s.lat, s.lng) }))
+                    .sort((a, b) => a.dist - b.dist);
+                busList = busList.map(s => ({ ...s, dist: haversineMetres(lat, lng, s.lat, s.lng) }))
+                    .sort((a, b) => a.dist - b.dist);
+            } else {
+                mtrList = mtrList.slice(0, 3).map(s => ({ ...s, dist: null }));
+                busList = busList.slice(0, 4).map(s => ({ ...s, dist: null }));
+            }
+
+            // Nearest 1 MTR + nearest 2 bus stops
+            const nearestMtr = mtrList.slice(0, 1);
+            const nearestBus = busList.slice(0, 2);
+
+            if (!nearestMtr.length && !nearestBus.length) {
+                container.innerHTML = `<div class="p-3 rounded-2xl bg-iosGray5 text-xs text-iosGray text-center">${isEn ? 'No nearby stops found' : '搵唔到附近車站'}</div>`;
                 return;
             }
-            // With GPS: show reference hubs (coordinates available for future distance ranking)
-            const stops = [
-                { name: "金鐘站", type: "MTR Hub", isStation: true, lines: ["港島綫", "荃灣綫", "東鐵綫"] },
-                { name: "天水圍市中心", type: "Bus / LR", isStation: false, routes: ["269B", "269C", "705"] },
-                { name: "尖沙咀碼頭", type: "Bus Terminus", isStation: false, routes: ["1A", "269B"] }
-            ];
 
-            container.innerHTML = stops.map(stop => `
-                <div class="p-3 rounded-2xl bg-iosGray5 border border-white/5 flex justify-between items-center text-xs">
-                    <div>
-                        <div class="font-bold text-white">${stop.name}</div>
-                        <div class="text-[10px] text-iosGray">${stop.isStation ? 'Lines: ' + stop.lines.join(', ') : 'Routes: ' + stop.routes.join(', ')}</div>
-                    </div>
-                    ${stop.isStation ? 
-                        `<button onclick="openStationModal('${stop.name}')" class="px-2.5 py-1 rounded-full bg-iosBlue/20 text-iosBlue font-bold text-[10px] active-scale">所有方向</button>` :
-                        `<span class="px-2 py-1 rounded-full bg-iosGreen/20 text-iosGreen font-semibold text-[10px]">Nearby</span>`
-                    }
-                </div>
-            `).join('');
+            function fmtDist(d) {
+                if (d == null) return '';
+                if (d < 1000) return Math.round(d) + ' m';
+                return (d / 1000).toFixed(1) + ' km';
+            }
+
+            let html = '';
+
+            // MTR section
+            if (nearestMtr.length) {
+                html += `<div class="text-[10px] font-bold text-iosGray uppercase tracking-wider mb-1.5 px-0.5">${isEn ? 'Nearest MTR' : '最近港鐵站'}</div>`;
+                html += nearestMtr.map(stop => {
+                    const distLabel = fmtDist(stop.dist);
+                    const sub = (stop.lines || []).join(' · ');
+                    return `
+                    <div class="p-3 rounded-2xl bg-iosGray5 border border-white/5 flex justify-between items-center text-xs gap-2 mb-2">
+                        <div class="min-w-0 flex items-center gap-2">
+                            <span class="w-2 h-2 rounded-full bg-mtrRed flex-shrink-0"></span>
+                            <div class="min-w-0">
+                                <div class="font-bold text-white truncate">${stop.name}</div>
+                                <div class="text-[10px] text-iosGray truncate">${sub}${distLabel ? ' · ' + distLabel : ''}</div>
+                            </div>
+                        </div>
+                        <button onclick="openStationModal('${stop.name}')" class="flex-shrink-0 px-2.5 py-1 rounded-full bg-iosBlue/20 text-iosBlue font-bold text-[10px] active-scale">${isEn ? 'All dirs' : '所有方向'}</button>
+                    </div>`;
+                }).join('');
+            }
+
+            // Bus section
+            if (nearestBus.length) {
+                html += `<div class="text-[10px] font-bold text-iosGray uppercase tracking-wider mb-1.5 mt-2 px-0.5">${isEn ? 'Nearest Bus Stops' : '最近巴士站'}</div>`;
+                html += nearestBus.map(stop => {
+                    const distLabel = fmtDist(stop.dist);
+                    const kind = stop.kind || '';
+                    const routes = (stop.routes || []).slice(0, 4).join(', ');
+                    return `
+                    <div class="p-3 rounded-2xl bg-iosGray5 border border-white/5 flex justify-between items-center text-xs gap-2 mb-2">
+                        <div class="min-w-0 flex items-center gap-2">
+                            <span class="w-2 h-2 rounded-full bg-kmbRed flex-shrink-0"></span>
+                            <div class="min-w-0">
+                                <div class="font-bold text-white truncate">${stop.name}</div>
+                                <div class="text-[10px] text-iosGray truncate">${kind}${kind && routes ? ' · ' : ''}${routes}${distLabel ? ' · ' + distLabel : ''}</div>
+                            </div>
+                        </div>
+                        <span class="flex-shrink-0 px-2 py-1 rounded-full bg-iosOrange/20 text-iosOrange font-semibold text-[10px]">${distLabel || (isEn ? 'Nearby' : '附近')}</span>
+                    </div>`;
+                }).join('');
+            }
+
+            container.innerHTML = html;
         }
 
         /* ==========================================================================
