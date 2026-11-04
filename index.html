@@ -5,8 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>HK Transit Express 香港公共交通</title>
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="theme-color" content="#000000">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" id="status-bar-style-meta">
+    <meta name="theme-color" content="#000000" id="theme-color-meta">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-title" content="HK Transit">
     <meta name="application-name" content="HK Transit">
@@ -55,6 +55,21 @@
             -webkit-tap-highlight-color: transparent;
             user-select: none;
             overflow-x: hidden;
+            padding-top: env(safe-area-inset-top, 0px);
+            padding-bottom: env(safe-area-inset-bottom, 0px);
+        }
+        header.sticky {
+            padding-top: calc(0.875rem + env(safe-area-inset-top, 0px)) !important;
+        }
+        nav.glass-nav {
+            padding-bottom: calc(1.5rem + env(safe-area-inset-bottom, 0px)) !important;
+        }
+        /* Ensure status bar area inherits app background in standalone */
+        html {
+            background-color: #000000;
+        }
+        body.theme-light, body.theme-light html {
+            background-color: #F2F2F7 !important;
         }
         .glass-panel {
             background: rgba(28, 28, 30, 0.88);
@@ -1623,7 +1638,35 @@
             "將軍澳", "坑口", "寶琳", "康城"
         ];
 
-        let savedFavoriteIds = JSON.parse(localStorage.getItem('hk_transit_favs_v3') || '["kmb-1a", "kmb-269c", "mtr-twl"]');
+        // Favorites: array of {id, dir, stopIdx, stopName}
+        // Migrate legacy string-only ids from v3
+        let savedFavorites = (function() {
+            try {
+                const v4 = localStorage.getItem('hk_transit_favs_v4');
+                if (v4) return JSON.parse(v4);
+            } catch (e) {}
+            try {
+                const v3 = JSON.parse(localStorage.getItem('hk_transit_favs_v3') || '[]');
+                if (Array.isArray(v3) && v3.length) {
+                    return v3.map(x => typeof x === 'string' ? { id: x, dir: 'outbound', stopIdx: 0, stopName: '' } : x);
+                }
+            } catch (e) {}
+            return [
+                { id: 'kmb-1a', dir: 'outbound', stopIdx: 0, stopName: '' },
+                { id: 'kmb-269c', dir: 'outbound', stopIdx: 0, stopName: '' },
+                { id: 'mtr-twl', dir: 'outbound', stopIdx: 0, stopName: '' }
+            ];
+        })();
+        function persistFavorites() {
+            localStorage.setItem('hk_transit_favs_v4', JSON.stringify(savedFavorites));
+        }
+        function favKey(f) {
+            return (f.id || '') + '|' + (f.dir || 'outbound') + '|' + (f.stopIdx != null ? f.stopIdx : 0);
+        }
+        function isFavPinned(routeId, dir, stopIdx) {
+            const k = (routeId || '') + '|' + (dir || 'outbound') + '|' + (stopIdx != null ? stopIdx : 0);
+            return savedFavorites.some(f => favKey(f) === k);
+        }
         let currentModalRoute = null;
         let currentRouteDirection = 'outbound';
         let currentSelectedStopName = '';
@@ -1813,6 +1856,40 @@
         }
 
         // Haversine distance in metres
+        let allKmbStopsCache = null;
+        async function loadAllKmbStops() {
+            if (allKmbStopsCache && allKmbStopsCache.length) return allKmbStopsCache;
+            try {
+                const cached = localStorage.getItem('hk_kmb_stops_v1');
+                if (cached) {
+                    const parsed = JSON.parse(cached);
+                    if (Array.isArray(parsed) && parsed.length > 100) {
+                        allKmbStopsCache = parsed;
+                        return allKmbStopsCache;
+                    }
+                }
+            } catch (e) {}
+            try {
+                const res = await fetch('https://data.etabus.gov.hk/v1/transport/kmb/stop');
+                const data = await res.json();
+                if (data && Array.isArray(data.data)) {
+                    allKmbStopsCache = data.data.map(s => ({
+                        id: s.stop,
+                        name: s.name_tc || s.name_en || s.stop,
+                        lat: parseFloat(s.lat),
+                        lng: parseFloat(s.long)
+                    })).filter(s => isFinite(s.lat) && isFinite(s.lng));
+                    try {
+                        localStorage.setItem('hk_kmb_stops_v1', JSON.stringify(allKmbStopsCache));
+                    } catch (e) { /* quota */ }
+                    return allKmbStopsCache;
+                }
+            } catch (e) {
+                console.log('KMB stop list load failed', e);
+            }
+            return allKmbStopsCache || [];
+        }
+
         function haversineMetres(lat1, lon1, lat2, lon2) {
             const R = 6371000;
             const toRad = d => d * Math.PI / 180;
@@ -1968,27 +2045,52 @@
             { name: "西九龍站巴士總站", kind: "總站", routes: ["12","20A","36B","42A","60X"], lat: 22.3040, lng: 114.1650 }
         ];
 
-        function renderNearbyStops(hasGps, lat, lng) {
+        async function renderNearbyStops(hasGps, lat, lng) {
             const container = document.getElementById('nearby-stops-container');
             if (!container) return;
             const isEn = (typeof currentLang !== 'undefined' && String(currentLang).startsWith('en'));
 
             let mtrList = NEARBY_MTR.slice();
-            let busList = NEARBY_BUS.slice();
+            let busList = NEARBY_BUS.slice().map(s => ({ ...s, kind: s.kind || '總站' }));
 
             if (hasGps && lat != null && lng != null && isFinite(lat) && isFinite(lng)) {
                 mtrList = mtrList.map(s => ({ ...s, dist: haversineMetres(lat, lng, s.lat, s.lng) }))
                     .sort((a, b) => a.dist - b.dist);
-                busList = busList.map(s => ({ ...s, dist: haversineMetres(lat, lng, s.lat, s.lng) }))
-                    .sort((a, b) => a.dist - b.dist);
+
+                // Load real KMB intermediate + terminal stops from data.gov.hk / etabus
+                container.innerHTML = `<div class="text-xs text-iosGray py-2 text-center"><i class="fa-solid fa-spinner fa-spin mr-1"></i> ${isEn ? 'Loading nearby bus stops…' : '載入附近巴士站…'}</div>`;
+                try {
+                    const allStops = await loadAllKmbStops();
+                    if (allStops && allStops.length) {
+                        const MAX_M = 900; // within ~900m
+                        const nearby = allStops
+                            .map(s => ({ ...s, dist: haversineMetres(lat, lng, s.lat, s.lng), kind: '巴士站', routes: [] }))
+                            .filter(s => s.dist <= MAX_M)
+                            .sort((a, b) => a.dist - b.dist)
+                            .slice(0, 12);
+                        if (nearby.length) {
+                            busList = nearby;
+                        } else {
+                            // fallback to hardcoded terminals sorted by distance
+                            busList = busList.map(s => ({ ...s, dist: haversineMetres(lat, lng, s.lat, s.lng) }))
+                                .sort((a, b) => a.dist - b.dist);
+                        }
+                    } else {
+                        busList = busList.map(s => ({ ...s, dist: haversineMetres(lat, lng, s.lat, s.lng) }))
+                            .sort((a, b) => a.dist - b.dist);
+                    }
+                } catch (e) {
+                    console.log('nearby bus stops', e);
+                    busList = busList.map(s => ({ ...s, dist: haversineMetres(lat, lng, s.lat, s.lng) }))
+                        .sort((a, b) => a.dist - b.dist);
+                }
             } else {
                 mtrList = mtrList.slice(0, 3).map(s => ({ ...s, dist: null }));
                 busList = busList.slice(0, 4).map(s => ({ ...s, dist: null }));
             }
 
-            // Nearest 1 MTR + nearest 2 bus stops
-            const nearestMtr = mtrList.slice(0, 1);
-            const nearestBus = busList.slice(0, 2);
+            const nearestMtr = mtrList.slice(0, 2);
+            const nearestBus = busList.slice(0, 6);
 
             if (!nearestMtr.length && !nearestBus.length) {
                 container.innerHTML = `<div class="p-3 rounded-2xl bg-iosGray5 text-xs text-iosGray text-center">${isEn ? 'No nearby stops found' : '搵唔到附近車站'}</div>`;
@@ -2003,7 +2105,6 @@
 
             let html = '';
 
-            // MTR section
             if (nearestMtr.length) {
                 html += `<div class="text-[10px] font-bold text-iosGray uppercase tracking-wider mb-1.5 px-0.5">${isEn ? 'Nearest MTR' : '最近港鐵站'}</div>`;
                 html += nearestMtr.map(stop => {
@@ -2018,14 +2119,13 @@
                                 <div class="text-[10px] text-iosGray truncate">${sub}${distLabel ? ' · ' + distLabel : ''}</div>
                             </div>
                         </div>
-                        <button onclick="openStationModal('${stop.name}')" class="flex-shrink-0 px-2.5 py-1 rounded-full bg-iosBlue/20 text-iosBlue font-bold text-[10px] active-scale">${isEn ? 'All dirs' : '所有方向'}</button>
+                        <button onclick="openStationModal('${stop.name.replace(/'/g, "\\'")}')" class="flex-shrink-0 px-2.5 py-1 rounded-full bg-iosBlue/20 text-iosBlue font-bold text-[10px] active-scale">${isEn ? 'All dirs' : '所有方向'}</button>
                     </div>`;
                 }).join('');
             }
 
-            // Bus section
             if (nearestBus.length) {
-                html += `<div class="text-[10px] font-bold text-iosGray uppercase tracking-wider mb-1.5 mt-2 px-0.5">${isEn ? 'Nearest Bus Stops' : '最近巴士站'}</div>`;
+                html += `<div class="text-[10px] font-bold text-iosGray uppercase tracking-wider mb-1.5 mt-2 px-0.5">${isEn ? 'Nearest Bus Stops (incl. intermediate)' : '最近巴士站（含中途站）'}</div>`;
                 html += nearestBus.map(stop => {
                     const distLabel = fmtDist(stop.dist);
                     const kind = stop.kind || '';
@@ -2369,11 +2469,12 @@
             renderQuickRoutes(filtered);
         }
 
-        function openRouteModal(routeId) {
+        function openRouteModal(routeId, preferDir, preferStopIdx) {
             const route = allRoutesDatabase.find(r => r.id === routeId);
             if (!route) return;
             currentModalRoute = route;
-            currentRouteDirection = 'outbound';
+            currentRouteDirection = (preferDir === 'inbound' || preferDir === 'outbound') ? preferDir : 'outbound';
+            const preferredIdx = (typeof preferStopIdx === 'number' && preferStopIdx >= 0) ? preferStopIdx : 0;
 
             history.pushState({ modalOpen: true }, '');
 
@@ -2386,9 +2487,8 @@
             document.getElementById('modal-est-time').innerText = route.estTime;
             document.getElementById('modal-service-hours').innerText = (typeof computeServiceHours === 'function' ? computeServiceHours(route) : null) || route.serviceHours || '—';
 
-            updateModalFavIcon();
             updateDirectionUI();
-            populateModalStopsDropdown();
+            populateModalStopsDropdown(preferredIdx);
 
             document.getElementById('route-modal-backdrop').classList.remove('opacity-0', 'pointer-events-none');
             document.getElementById('route-modal').classList.remove('sheet-hidden');
@@ -2408,7 +2508,7 @@
         function switchRouteDirection(dir) {
             currentRouteDirection = dir;
             updateDirectionUI();
-            populateModalStopsDropdown();
+            populateModalStopsDropdown(0);
         }
 
         function updateDirectionUI() {
@@ -2468,7 +2568,7 @@
 
         let currentSelectedStopIndex = 0;
 
-        async function populateModalStopsDropdown() {
+        async function populateModalStopsDropdown(preferredIdx) {
             if (!currentModalRoute) return;
             const listEl = document.getElementById('modal-stations-list');
 
@@ -2476,7 +2576,7 @@
 
             let stops = currentRouteDirection === 'outbound' ? currentModalRoute.stopsOutbound : currentModalRoute.stopsInbound;
             currentOfficialStopIds = [];
-            currentSelectedStopIndex = 0;
+            let sel = (typeof preferredIdx === 'number' && preferredIdx >= 0) ? preferredIdx : 0;
 
             if (currentModalRoute.apiType === 'kmb') {
                 try {
@@ -2495,9 +2595,12 @@
                 }
             }
 
-            currentSelectedStopName = stops[0] || '';
-            renderStationSequenceList(stops, 0);
-            fetchDataGovHkETA(currentModalRoute, 0);
+            if (sel >= stops.length) sel = 0;
+            currentSelectedStopIndex = sel;
+            currentSelectedStopName = stops[sel] || '';
+            renderStationSequenceList(stops, sel);
+            fetchDataGovHkETA(currentModalRoute, sel);
+            updateModalFavIcon();
         }
 
         function selectStopFromSequence(idx) {
@@ -2508,6 +2611,7 @@
             currentSelectedStopName = stops[idx];
             renderStationSequenceList(stops, idx);
             fetchDataGovHkETA(currentModalRoute, idx);
+            updateModalFavIcon();
         }
 
         function renderStationSequenceList(stops, selectedIdx) {
@@ -2707,8 +2811,10 @@
                         const etaData = await etaRes.json();
                         if (etaData && etaData.data) {
                             etas = etaData.data.filter(item => item.eta).slice(0, 4).map(item => {
-                                const diffMins = Math.max(0, Math.round((new Date(item.eta) - new Date()) / 60000));
-                                return { min: diffMins, remark: item.rmk_tc || item.rmk_en || '正常班次' };
+                                const etaDate = new Date(item.eta);
+                                const diffMins = Math.max(0, Math.round((etaDate - new Date()) / 60000));
+                                const timeStr = etaDate.toLocaleTimeString('en-HK', { hour: 'numeric', minute: '2-digit', hour12: true }).toLowerCase();
+                                return { min: diffMins, remark: item.rmk_tc || item.rmk_en || '正常班次', time: timeStr };
                             });
                         }
                     }
@@ -2784,15 +2890,24 @@
                 return;
             }
 
-            container.innerHTML = etas.map((eta, idx) => `
+            container.innerHTML = etas.map((eta, idx) => {
+                let timePart = '';
+                if (eta.time) {
+                    timePart = ` (${eta.time})`;
+                } else if (typeof eta.min === 'number' && eta.min > 0) {
+                    const approx = new Date(Date.now() + eta.min * 60000);
+                    timePart = ` (${approx.toLocaleTimeString('en-HK', { hour: 'numeric', minute: '2-digit', hour12: true }).toLowerCase()})`;
+                }
+                const minLabel = eta.min === 0 ? '即將到站' : (eta.min + ' 分鐘');
+                return `
                 <div class="p-3 rounded-xl ${idx===0?'bg-iosGreen/10 border border-iosGreen/30':'bg-iosGray5'} flex justify-between items-center">
                     <div class="flex items-center space-x-2">
                         <i class="fa-solid ${idx===0?'fa-train-subway text-iosGreen':'fa-clock text-iosGray'} text-sm"></i>
                         <span class="text-xs font-medium text-white">${eta.remark}</span>
                     </div>
-                    <span class="text-sm font-bold ${idx===0?'text-iosGreen':'text-white'}">${eta.min === 0 ? '即將到站' : eta.min + ' 分鐘'}</span>
-                </div>
-            `).join('');
+                    <span class="text-sm font-bold ${idx===0?'text-iosGreen':'text-white'} text-right">${minLabel}${timePart}</span>
+                </div>`;
+            }).join('');
         }
 
         /* ==========================================================================
@@ -2875,50 +2990,94 @@
         /* ==========================================================================
            9. FAVORITES
            ========================================================================== */
-        function renderFavorites() {
+        async function renderFavorites() {
             const container = document.getElementById('favorites-container');
-            const favRoutes = allRoutesDatabase.filter(r => savedFavoriteIds.includes(r.id));
-
-            if (favRoutes.length === 0) {
+            if (!container) return;
+            if (!savedFavorites.length) {
                 container.innerHTML = `<div class="text-xs text-iosGray text-center py-4 glass-card rounded-2xl">未有釘選路線。</div>`;
                 return;
             }
 
-            container.innerHTML = favRoutes.map(item => `
-                <div onclick="openRouteModal('${item.id}')" class="glass-card rounded-2xl p-3.5 border border-white/5 active-scale cursor-pointer flex justify-between items-center">
-                    <div class="flex items-center space-x-3">
-                        <span class="${item.badgeBg} font-bold text-xs px-2.5 py-1 rounded-lg route-badge">${item.route}</span>
-                        <div>
-                            <div class="font-bold text-sm text-white">${(function(){ const d=displayRouteLabel(item); return d.from + ' ➔ ' + d.to; })()}</div>
-                            <div class="text-[10px] text-iosGray">${item.operator} • ${item.fare}</div>
+            // Build cards; ETA fetched best-effort
+            const cards = await Promise.all(savedFavorites.map(async (fav) => {
+                const item = allRoutesDatabase.find(r => r.id === fav.id);
+                if (!item) return '';
+                const d = displayRouteLabel(item);
+                const dirLabel = fav.dir === 'inbound'
+                    ? (isCjkUiLang(currentLang) ? '回程' : 'Inbound')
+                    : (isCjkUiLang(currentLang) ? '去程' : 'Outbound');
+                const stopLabel = fav.stopName
+                    ? displayPlace(String(fav.stopName).split('/')[0].replace(/<br>.*/,'').trim())
+                    : (fav.dir === 'inbound' ? d.to : d.from);
+                let etaNum = null;
+                try {
+                    if (item.apiType === 'kmb') {
+                        // Quick ETA for pinned stop if we have stop id via route-stop
+                        const dir = fav.dir === 'outbound' ? 'outbound' : 'inbound';
+                        const rs = await fetch(`https://data.etabus.gov.hk/v1/transport/kmb/route-stop/${item.routeNo}/${dir}/1`);
+                        const rsData = await rs.json();
+                        if (rsData && rsData.data && rsData.data.length) {
+                            const idx = Math.min(fav.stopIdx || 0, rsData.data.length - 1);
+                            const stopId = rsData.data[idx].stop;
+                            const etaRes = await fetch(`https://data.etabus.gov.hk/v1/transport/kmb/eta/${stopId}/${item.routeNo}/1`);
+                            const etaData = await etaRes.json();
+                            if (etaData && etaData.data) {
+                                const first = etaData.data.filter(x => x.eta)[0];
+                                if (first) {
+                                    etaNum = Math.max(0, Math.round((new Date(first.eta) - new Date()) / 60000));
+                                }
+                            }
+                        }
+                    }
+                } catch (e) {}
+                const etaHtml = etaNum != null
+                    ? `<span class="inline-block min-w-[2rem] px-2.5 py-0.5 rounded-full bg-iosGreen/20 text-iosGreen text-[13px] font-bold text-center">${etaNum}</span>
+                       <div class="text-[9px] text-iosGray mt-0.5">Live</div>`
+                    : `<span class="inline-block min-w-[2rem] px-2.5 py-0.5 rounded-full bg-iosGray5 text-iosGray text-[13px] font-bold text-center">—</span>
+                       <div class="text-[9px] text-iosGray mt-0.5">—</div>`;
+                return `
+                <div onclick="openRouteModal('${item.id}', '${fav.dir || 'outbound'}', ${fav.stopIdx || 0})" class="glass-card rounded-2xl p-3.5 border border-white/5 active-scale cursor-pointer flex justify-between items-center">
+                    <div class="flex items-center space-x-3 min-w-0">
+                        <span class="${item.badgeBg} font-bold text-xs px-2.5 py-1 rounded-lg route-badge flex-shrink-0">${item.route}</span>
+                        <div class="min-w-0">
+                            <div class="font-bold text-sm text-white truncate">${stopLabel}</div>
+                            <div class="text-[10px] text-iosGray truncate">${item.operator} · ${dirLabel} · ${d.from} ➔ ${d.to}</div>
                         </div>
                     </div>
-                    <div class="text-right">
-                        <span class="inline-block px-2.5 py-0.5 rounded-full bg-iosGreen/20 text-iosGreen text-[11px] font-bold">
-                            ${Math.floor(Math.random() * 5) + 3} min
-                        </span>
-                        <div class="text-[9px] text-iosGray mt-0.5">Live</div>
+                    <div class="text-right flex-shrink-0 ml-2">
+                        ${etaHtml}
                     </div>
-                </div>
-            `).join('');
+                </div>`;
+            }));
+
+            container.innerHTML = cards.filter(Boolean).join('') || `<div class="text-xs text-iosGray text-center py-4 glass-card rounded-2xl">未有釘選路線。</div>`;
         }
 
         function toggleFavoriteCurrentModal() {
             if (!currentModalRoute) return;
-            const index = savedFavoriteIds.indexOf(currentModalRoute.id);
-            if (index > -1) {
-                savedFavoriteIds.splice(index, 1);
+            const routeId = currentModalRoute.id;
+            const dir = currentRouteDirection || 'outbound';
+            const stopIdx = (typeof currentSelectedStopIndex === 'number') ? currentSelectedStopIndex : 0;
+            const stops = dir === 'outbound' ? (currentModalRoute.stopsOutbound || []) : (currentModalRoute.stopsInbound || []);
+            const stopName = stops[stopIdx] || currentSelectedStopName || '';
+            const k = favKey({ id: routeId, dir, stopIdx });
+            const existing = savedFavorites.findIndex(f => favKey(f) === k);
+            if (existing > -1) {
+                savedFavorites.splice(existing, 1);
             } else {
-                savedFavoriteIds.push(currentModalRoute.id);
+                savedFavorites.push({ id: routeId, dir, stopIdx, stopName });
             }
-            localStorage.setItem('hk_transit_favs_v3', JSON.stringify(savedFavoriteIds));
+            persistFavorites();
             updateModalFavIcon();
             renderFavorites();
         }
 
         function updateModalFavIcon() {
             const btn = document.getElementById('modal-fav-btn');
-            if (savedFavoriteIds.includes(currentModalRoute.id)) {
+            if (!btn || !currentModalRoute) return;
+            const dir = currentRouteDirection || 'outbound';
+            const stopIdx = (typeof currentSelectedStopIndex === 'number') ? currentSelectedStopIndex : 0;
+            if (isFavPinned(currentModalRoute.id, dir, stopIdx)) {
                 btn.innerHTML = `<i class="fa-star fa-solid text-xl text-amber-400"></i>`;
             } else {
                 btn.innerHTML = `<i class="fa-star fa-regular text-xl text-iosGray"></i>`;
@@ -3134,12 +3293,17 @@
         function setTheme(mode) {
             const body = document.body;
             localStorage.setItem('hk_transit_theme', mode);
+            const themeMeta = document.getElementById('theme-color-meta') || document.querySelector('meta[name="theme-color"]');
+            const statusMeta = document.getElementById('status-bar-style-meta') || document.querySelector('meta[name="apple-mobile-web-app-status-bar-style"]');
             if (mode === 'light') {
                 body.classList.add('theme-light');
                 body.classList.remove('bg-black', 'text-white');
                 body.classList.add('bg-[#F2F2F7]', 'text-gray-900');
                 body.style.backgroundColor = '#F2F2F7';
                 body.style.color = '#1C1C1E';
+                document.documentElement.style.backgroundColor = '#F2F2F7';
+                if (themeMeta) themeMeta.setAttribute('content', '#F2F2F7');
+                if (statusMeta) statusMeta.setAttribute('content', 'default');
                 document.getElementById('theme-btn-light')?.classList.add('bg-iosBlue', 'text-white');
                 document.getElementById('theme-btn-dark')?.classList.remove('bg-iosBlue', 'text-white');
             } else {
@@ -3148,6 +3312,9 @@
                 body.classList.remove('bg-[#F2F2F7]', 'text-gray-900');
                 body.style.backgroundColor = '#000';
                 body.style.color = '#fff';
+                document.documentElement.style.backgroundColor = '#000000';
+                if (themeMeta) themeMeta.setAttribute('content', '#000000');
+                if (statusMeta) statusMeta.setAttribute('content', 'black-translucent');
                 document.getElementById('theme-btn-dark')?.classList.add('bg-iosBlue', 'text-white');
                 document.getElementById('theme-btn-light')?.classList.remove('bg-iosBlue', 'text-white');
             }
