@@ -71,6 +71,17 @@
         body.theme-light, body.theme-light html {
             background-color: #F2F2F7 !important;
         }
+        body.weather-severe-red {
+            background-color: #2a0808 !important;
+        }
+        body.weather-severe-red.theme-light {
+            background-color: #fde8e8 !important;
+        }
+        body.weather-severe-red .glass-panel,
+        body.weather-severe-red .glass-nav,
+        body.weather-severe-red .glass-card {
+            border-color: rgba(239, 68, 68, 0.25) !important;
+        }
         .glass-panel {
             background: rgba(28, 28, 30, 0.88);
             backdrop-filter: blur(25px) saturate(180%);
@@ -461,6 +472,31 @@
                 <div id="search-autocomplete-dropdown" class="hidden absolute top-full left-0 right-0 mt-1.5 bg-iosGray6 border border-white/10 rounded-2xl shadow-2xl max-h-72 overflow-y-auto divide-y divide-white/5 z-50"></div>
             </div>
 
+            <!-- Weather bar -->
+            <div id="home-weather-block" class="glass-card rounded-3xl p-4">
+                <div class="flex items-center justify-between gap-3">
+                    <div class="flex items-center gap-3 min-w-0">
+                        <div id="weather-icon" class="text-3xl flex-shrink-0" aria-hidden="true">🌤️</div>
+                        <div class="min-w-0">
+                            <div id="weather-condition" class="font-semibold text-sm text-white truncate">載入天氣中…</div>
+                            <div class="text-[11px] text-iosGray mt-0.5">
+                                <span id="weather-temp">--°C</span>
+                                <span class="mx-1">·</span>
+                                <span id="weather-humidity">濕度 --%</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="weather-warnings" class="flex flex-wrap gap-1 justify-end max-w-[45%]"></div>
+                </div>
+            </div>
+
+            <!-- Severe weather top alert (after modal dismissed) -->
+            <div id="weather-alert-banner" class="hidden rounded-2xl px-3 py-2.5 text-xs font-semibold flex items-center gap-2 border border-red-500/40 bg-red-500/15 text-red-200">
+                <i class="fa-solid fa-triangle-exclamation"></i>
+                <span id="weather-alert-text"></span>
+                <button type="button" onclick="document.getElementById('weather-alert-banner').classList.add('hidden')" class="ml-auto text-[10px] opacity-80">關閉</button>
+            </div>
+
             <div id="home-fav-block">
                 <div class="flex justify-between items-center mb-2 px-1">
                     <h2 id="lbl-fav-title" class="font-semibold text-base text-white">已釘選路線</h2>
@@ -603,6 +639,15 @@
                     <p id="pwa-install-desc" class="text-[10px] text-iosGray mt-2">安裝後可像原生 App 一樣使用，並從主畫面開啟。</p>
                 </div>
 
+                <div>
+                    <div class="text-xs font-bold text-iosGray uppercase mb-2">Developer</div>
+                    <button type="button" onclick="openDevModal()" class="w-full py-3 rounded-2xl bg-red-500/20 border border-red-500/40 text-red-300 text-sm font-bold active-scale flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-code"></i>
+                        <span>Developer Mode</span>
+                    </button>
+                    <p class="text-[10px] text-iosGray mt-2">需輸入密碼。啟用後可自訂天氣與警告等測試資料。</p>
+                </div>
+
                 <div class="border-t border-white/10 pt-4 space-y-3">
                     <div id="lbl-settings-legal" class="text-xs font-bold text-iosGray uppercase">Legal</div>
                     <p class="text-[10px] text-iosGray leading-relaxed px-0.5">Only the English version of the Disclaimer, Cookie Policy and Credits is legally binding. Translations are provided for convenience only and have no legal effect.</p>
@@ -648,6 +693,50 @@
             </div>
         </section>
 
+        <!-- TAB: DEV TOOLS -->
+        <section id="tab-dev" class="hidden space-y-4">
+            <h2 class="font-bold text-lg text-white px-1">Dev Tools</h2>
+            <div class="glass-card rounded-3xl p-4 space-y-4 border border-red-500/30">
+                <p class="text-[11px] text-red-300">所有自訂僅存於本機，不會上傳。關閉 Dev Mode 後恢復真實數據。</p>
+                <div>
+                    <div class="text-xs font-bold text-iosGray uppercase mb-2">自訂天氣狀況</div>
+                    <select id="dev-weather-condition" class="w-full p-3 rounded-2xl bg-iosGray5 text-sm border border-white/10 text-white outline-none">
+                        <option value="">（使用真實天氣）</option>
+                        <option value="sunny">天晴 Sunny</option>
+                        <option value="cloudy">多雲 Cloudy</option>
+                        <option value="overcast">陰 Overcast</option>
+                        <option value="rain">雨 Rain</option>
+                        <option value="heavy_rain">大雨 Heavy rain</option>
+                        <option value="thunder">雷暴 Thunderstorm</option>
+                        <option value="fog">霧 Fog</option>
+                    </select>
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <div class="text-xs font-bold text-iosGray uppercase mb-1">溫度 °C</div>
+                        <input type="number" id="dev-weather-temp" placeholder="例 28" class="w-full p-3 rounded-2xl bg-iosGray5 text-sm border border-white/10 text-white outline-none">
+                    </div>
+                    <div>
+                        <div class="text-xs font-bold text-iosGray uppercase mb-1">相對濕度 %</div>
+                        <input type="number" id="dev-weather-humidity" placeholder="例 80" class="w-full p-3 rounded-2xl bg-iosGray5 text-sm border border-white/10 text-white outline-none">
+                    </div>
+                </div>
+                <div>
+                    <div class="text-xs font-bold text-iosGray uppercase mb-2">強制天氣警告</div>
+                    <div class="space-y-2 text-sm">
+                        <label class="flex items-center gap-2"><input type="checkbox" id="dev-warn-rain-red" class="rounded"> 紅色暴雨警告</label>
+                        <label class="flex items-center gap-2"><input type="checkbox" id="dev-warn-rain-black" class="rounded"> 黑色暴雨警告</label>
+                        <label class="flex items-center gap-2"><input type="checkbox" id="dev-warn-tc8" class="rounded"> 八號熱帶氣旋警告</label>
+                        <label class="flex items-center gap-2"><input type="checkbox" id="dev-warn-tc9" class="rounded"> 九號熱帶氣旋警告</label>
+                        <label class="flex items-center gap-2"><input type="checkbox" id="dev-warn-tc10" class="rounded"> 十號熱帶氣旋警告</label>
+                    </div>
+                </div>
+                <button type="button" onclick="applyDevWeatherOverrides()" class="w-full py-3 rounded-2xl bg-iosBlue text-white text-sm font-bold active-scale">套用自訂天氣</button>
+                <button type="button" onclick="clearDevWeatherOverrides()" class="w-full py-2.5 rounded-2xl bg-iosGray5 text-iosGray text-xs font-semibold">清除自訂（改回真實）</button>
+            </div>
+            <button type="button" onclick="exitDevMode()" class="w-full py-3.5 rounded-2xl bg-red-500 text-white text-sm font-bold active-scale">退出 Dev Mode</button>
+        </section>
+
     </main>
 
     <!-- Bottom Navigation Dock -->
@@ -672,6 +761,10 @@
             <button onclick="switchTab('settings')" id="nav-settings" class="flex flex-col items-center text-iosGray hover:text-iosBlue transition px-2">
                 <i class="fa-solid fa-gear text-lg"></i>
                 <span id="nav-lbl-settings" class="text-[10px] font-medium mt-1">設定</span>
+            </button>
+            <button onclick="switchTab('dev')" id="nav-dev" class="hidden flex flex-col items-center text-iosGray hover:text-iosBlue transition px-2">
+                <i class="fa-solid fa-code text-lg"></i>
+                <span id="nav-lbl-dev" class="text-[10px] font-medium mt-1">Dev</span>
             </button>
         </div>
     </nav>
@@ -794,6 +887,44 @@
             <div id="station-lines-container" class="space-y-4"></div>
         </div>
     </div>
+
+    <!-- Weather severe warning modal -->
+    <div id="weather-warn-modal-backdrop" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-[90] opacity-0 pointer-events-none transition-opacity duration-300"></div>
+    <div id="weather-warn-modal" class="fixed z-[91] left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[min(420px,92vw)] max-h-[85vh] bg-red-950 border border-red-500/50 rounded-3xl shadow-2xl overflow-hidden flex flex-col opacity-0 pointer-events-none scale-95 transition-all duration-300">
+        <div class="px-5 pt-5 pb-3 flex items-start gap-3">
+            <div class="w-10 h-10 rounded-full bg-red-500/20 flex items-center justify-center flex-shrink-0">
+                <i class="fa-solid fa-triangle-exclamation text-red-400 text-lg"></i>
+            </div>
+            <div class="min-w-0 flex-1">
+                <h2 class="text-base font-bold text-white">天氣警告</h2>
+                <p id="weather-warn-modal-body" class="text-sm text-red-100/90 mt-1 leading-relaxed"></p>
+            </div>
+        </div>
+        <div class="px-5 pb-5 pt-2">
+            <button type="button" onclick="dismissWeatherWarnModal()" class="w-full py-3 rounded-2xl bg-red-500 text-white font-bold text-sm active-scale">我知道了</button>
+        </div>
+    </div>
+
+    <!-- Dev mode password / disclaimer modal -->
+    <div id="dev-modal-backdrop" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-[90] opacity-0 pointer-events-none transition-opacity duration-300"></div>
+    <div id="dev-modal" class="fixed z-[91] left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[min(420px,92vw)] max-h-[85vh] bg-red-950 border border-red-500/50 rounded-3xl shadow-2xl overflow-hidden flex flex-col opacity-0 pointer-events-none scale-95 transition-all duration-300">
+        <div class="px-5 pt-5 pb-3">
+            <h2 class="text-base font-bold text-white">Developer Mode</h2>
+            <p class="text-xs text-red-200/90 mt-2 leading-relaxed">免責聲明：Dev Mode 內所有資訊（包括天氣、警告、自訂資料）僅供開發測試，不保證正確、完整或即時。請勿依賴作實際出行決定。使用風險自負。</p>
+            <div id="dev-pass-wrap" class="mt-4">
+                <label class="text-[11px] text-iosGray">輸入密碼以啟用</label>
+                <input type="password" id="dev-pass-input" placeholder="Password" class="w-full mt-1 p-3 rounded-xl bg-black/40 border border-white/10 text-white text-sm outline-none focus:ring-2 focus:ring-red-500" onkeydown="if(event.key==='Enter')tryEnableDevMode()">
+                <p id="dev-pass-err" class="text-[11px] text-red-400 mt-1 hidden">密碼錯誤</p>
+            </div>
+        </div>
+        <div class="px-5 pb-5 pt-2 flex gap-2">
+            <button type="button" onclick="closeDevModal()" class="flex-1 py-3 rounded-2xl bg-white/10 text-white font-semibold text-sm">取消</button>
+            <button type="button" id="dev-confirm-btn" onclick="tryEnableDevMode()" class="flex-1 py-3 rounded-2xl bg-red-500 text-white font-bold text-sm">確認</button>
+        </div>
+    </div>
+
+    <!-- Toast -->
+    <div id="app-toast" class="fixed left-1/2 -translate-x-1/2 bottom-24 z-[120] px-4 py-2.5 rounded-2xl bg-iosGray5 border border-white/10 text-sm text-white shadow-xl opacity-0 pointer-events-none transition-opacity duration-300"></div>
 
     <!-- Application Script Core -->
     <script>
@@ -2858,6 +2989,59 @@
                             etas = etas.slice(0, 4);
                         }
                     }
+                } else if (route.apiType === 'mtr-bus' || route.operator === 'MTR Bus') {
+                    // POST https://rt.data.gov.hk/v1/transport/mtr/bus/getSchedule
+                    const routeName = route.routeNo || route.route;
+                    const data = await fetchMtrBusEta(routeName, currentLang && currentLang.startsWith('en') ? 'en' : 'zh');
+                    if (data && data.busStop) {
+                        // Find matching stop by name approximate
+                        const target = (stopName || '').replace(/<br>.*/,'').trim();
+                        let matched = data.busStop;
+                        if (target) {
+                            const found = data.busStop.find(s => (s.busStopName_TC || s.busStopName_EN || '').includes(target) || target.includes(s.busStopName_TC || ''));
+                            if (found) matched = [found];
+                        }
+                        for (const stop of (matched || []).slice(0, 1)) {
+                            const arr = stop.busArrival || stop.nextBus || [];
+                            for (const item of arr.slice(0, 4)) {
+                                const mins = item.estimatedArrivalTime != null ? parseInt(item.estimatedArrivalTime, 10) : (item.timeToStation != null ? parseInt(item.timeToStation, 10) : null);
+                                etas.push({
+                                    min: (mins === null || isNaN(mins)) ? '--' : mins,
+                                    remark: item.destination_TC || item.destination_EN || item.dest || 'MTR Bus'
+                                });
+                            }
+                        }
+                    } else if (data && data.data) {
+                        // alternate shape
+                        const list = Array.isArray(data.data) ? data.data : [];
+                        for (const item of list.slice(0, 4)) {
+                            etas.push({ min: item.ttnt || item.eta_min || '--', remark: item.dest || 'MTR Bus' });
+                        }
+                    }
+                } else if (route.apiType === 'gmb' || route.operator === 'GMB' || route.operator === '專線小巴') {
+                    // https://data.etagmb.gov.hk
+                    if (route.gmbStopId) {
+                        const data = await fetchGmbStopEta(route.gmbStopId);
+                        const arr = (data && data.data && data.data.eta) ? data.data.eta : (data && data.data) || [];
+                        const list = Array.isArray(arr) ? arr : [];
+                        for (const item of list.slice(0, 4)) {
+                            const mins = item.diff != null ? item.diff : (item.eta_seq != null ? item.diff : null);
+                            etas.push({
+                                min: mins != null ? mins : '--',
+                                remark: item.remarks_tc || item.remarks_en || ('小巴 ' + (route.route || ''))
+                            });
+                        }
+                    } else if (route.gmbRouteId != null && route.gmbRouteSeq != null && typeof stopIndex === 'number') {
+                        const data = await fetchGmbRouteStopEta(route.gmbRouteId, route.gmbRouteSeq, stopIndex + 1);
+                        const node = data && data.data;
+                        const list = (node && node.eta) ? node.eta : [];
+                        for (const item of (list || []).slice(0, 4)) {
+                            etas.push({
+                                min: item.diff != null ? item.diff : '--',
+                                remark: item.remarks_tc || item.remarks_en || '專線小巴'
+                            });
+                        }
+                    }
                 }
             } catch (err) {
                 console.log("ETA network fallback", err);
@@ -3690,6 +3874,373 @@
             ctx.arcTo(x, y + h, x, y, r);
             ctx.arcTo(x, y, x + w, y, r);
             ctx.closePath();
+        }
+
+        /* ==========================================================================
+           WEATHER + DEV MODE + EXTRA ETA
+           ========================================================================== */
+        let devModeActive = localStorage.getItem('hk_transit_dev') === '1';
+        let weatherWarnDismissedSession = false;
+        let lastWeatherPayload = null;
+
+        const WEATHER_ICON_MAP = {
+            sunny: '☀️', cloudy: '⛅', overcast: '☁️', rain: '🌧️', heavy_rain: '⛈️', thunder: '⚡', fog: '🌫️',
+            default: '🌤️'
+        };
+        // HKO icon codes (approx mapping)
+        const HKO_ICON_TO_KEY = {
+            50: 'sunny', 51: 'sunny', 52: 'sunny', 53: 'sunny', 54: 'cloudy', 60: 'cloudy', 61: 'cloudy',
+            62: 'cloudy', 63: 'overcast', 64: 'overcast', 65: 'rain', 70: 'rain', 71: 'rain', 72: 'rain',
+            73: 'heavy_rain', 74: 'heavy_rain', 75: 'heavy_rain', 76: 'thunder', 77: 'thunder', 80: 'fog', 81: 'fog', 82: 'fog', 83: 'fog', 84: 'fog', 85: 'fog'
+        };
+
+        function showToast(msg) {
+            const el = document.getElementById('app-toast');
+            if (!el) return;
+            el.textContent = msg;
+            el.classList.remove('opacity-0', 'pointer-events-none');
+            clearTimeout(showToast._t);
+            showToast._t = setTimeout(() => {
+                el.classList.add('opacity-0', 'pointer-events-none');
+            }, 2400);
+        }
+
+        function openDevModal() {
+            document.getElementById('dev-pass-err')?.classList.add('hidden');
+            const input = document.getElementById('dev-pass-input');
+            if (input) input.value = '';
+            const bd = document.getElementById('dev-modal-backdrop');
+            const md = document.getElementById('dev-modal');
+            bd.classList.remove('opacity-0', 'pointer-events-none');
+            md.classList.remove('opacity-0', 'pointer-events-none', 'scale-95');
+            md.classList.add('scale-100');
+            if (devModeActive) {
+                document.getElementById('dev-pass-wrap')?.classList.add('hidden');
+                document.getElementById('dev-confirm-btn').innerText = '進入工具';
+            } else {
+                document.getElementById('dev-pass-wrap')?.classList.remove('hidden');
+                document.getElementById('dev-confirm-btn').innerText = '確認';
+            }
+        }
+        function closeDevModal() {
+            document.getElementById('dev-modal-backdrop')?.classList.add('opacity-0', 'pointer-events-none');
+            const md = document.getElementById('dev-modal');
+            md?.classList.add('opacity-0', 'pointer-events-none', 'scale-95');
+            md?.classList.remove('scale-100');
+        }
+        function tryEnableDevMode() {
+            if (devModeActive) {
+                closeDevModal();
+                switchTab('dev');
+                return;
+            }
+            const pass = (document.getElementById('dev-pass-input')?.value || '').trim();
+            if (pass !== 'Dev2026') {
+                document.getElementById('dev-pass-err')?.classList.remove('hidden');
+                return;
+            }
+            devModeActive = true;
+            localStorage.setItem('hk_transit_dev', '1');
+            document.getElementById('nav-dev')?.classList.remove('hidden');
+            closeDevModal();
+            switchTab('dev');
+            showToast('已進入 Developer Mode');
+        }
+        function exitDevMode() {
+            devModeActive = false;
+            localStorage.removeItem('hk_transit_dev');
+            localStorage.removeItem('hk_transit_dev_weather');
+            document.getElementById('nav-dev')?.classList.add('hidden');
+            switchTab('home');
+            applySevereWeatherTheme(false);
+            fetchAndRenderWeather(true);
+            showToast('已退出 Dev Mode');
+        }
+        function getDevWeatherOverrides() {
+            try { return JSON.parse(localStorage.getItem('hk_transit_dev_weather') || 'null'); } catch(e) { return null; }
+        }
+        function applyDevWeatherOverrides() {
+            const ov = {
+                condition: document.getElementById('dev-weather-condition')?.value || '',
+                temp: document.getElementById('dev-weather-temp')?.value,
+                humidity: document.getElementById('dev-weather-humidity')?.value,
+                rainRed: !!document.getElementById('dev-warn-rain-red')?.checked,
+                rainBlack: !!document.getElementById('dev-warn-rain-black')?.checked,
+                tc8: !!document.getElementById('dev-warn-tc8')?.checked,
+                tc9: !!document.getElementById('dev-warn-tc9')?.checked,
+                tc10: !!document.getElementById('dev-warn-tc10')?.checked
+            };
+            localStorage.setItem('hk_transit_dev_weather', JSON.stringify(ov));
+            weatherWarnDismissedSession = false;
+            renderWeatherFromPayload(lastWeatherPayload || {}, ov);
+            showToast('已套用自訂天氣');
+        }
+        function clearDevWeatherOverrides() {
+            localStorage.removeItem('hk_transit_dev_weather');
+            weatherWarnDismissedSession = false;
+            fetchAndRenderWeather(true);
+            showToast('已清除自訂天氣');
+        }
+
+        function dismissWeatherWarnModal() {
+            weatherWarnDismissedSession = true;
+            document.getElementById('weather-warn-modal-backdrop')?.classList.add('opacity-0', 'pointer-events-none');
+            const md = document.getElementById('weather-warn-modal');
+            md?.classList.add('opacity-0', 'pointer-events-none', 'scale-95');
+            md?.classList.remove('scale-100');
+            // show banner
+            const banner = document.getElementById('weather-alert-banner');
+            const text = document.getElementById('weather-alert-text');
+            if (banner && text && lastWeatherPayload && lastWeatherPayload._severeLabels && lastWeatherPayload._severeLabels.length) {
+                text.textContent = lastWeatherPayload._severeLabels.join(' · ');
+                banner.classList.remove('hidden');
+            }
+        }
+        function showWeatherWarnModal(labels) {
+            const body = document.getElementById('weather-warn-modal-body');
+            if (body) body.textContent = '目前生效：' + labels.join('、') + '。請留意最新天氣及公共交通安排，出行前查閱官方資訊。';
+            document.getElementById('weather-warn-modal-backdrop')?.classList.remove('opacity-0', 'pointer-events-none');
+            const md = document.getElementById('weather-warn-modal');
+            md?.classList.remove('opacity-0', 'pointer-events-none', 'scale-95');
+            md?.classList.add('scale-100');
+        }
+
+        function applySevereWeatherTheme(isSevereRed) {
+            const body = document.body;
+            if (isSevereRed) {
+                body.classList.add('weather-severe-red');
+                body.style.setProperty('--severe-bg', '#3b0a0a');
+                if (!body.classList.contains('theme-light')) {
+                    body.style.backgroundColor = '#2a0808';
+                } else {
+                    body.style.backgroundColor = '#fde8e8';
+                }
+            } else {
+                body.classList.remove('weather-severe-red');
+                // restore theme
+                const mode = localStorage.getItem('hk_transit_theme') || 'dark';
+                setTheme(mode);
+            }
+        }
+
+        async function fetchAndRenderWeather(force) {
+            try {
+                const [rhr, warn] = await Promise.all([
+                    fetch('https://data.weather.gov.hk/weatherAPI/opendata/weather.php?dataType=rhrread&lang=tc').then(r => r.json()),
+                    fetch('https://data.weather.gov.hk/weatherAPI/opendata/weather.php?dataType=warnsum&lang=tc').then(r => r.json()).catch(() => ({}))
+                ]);
+                lastWeatherPayload = { rhr, warn };
+                const ov = devModeActive ? getDevWeatherOverrides() : null;
+                renderWeatherFromPayload(lastWeatherPayload, ov);
+            } catch (e) {
+                console.log('weather fetch fail', e);
+                document.getElementById('weather-condition') && (document.getElementById('weather-condition').textContent = '天氣資料暫時未能取得');
+            }
+        }
+
+        function renderWeatherFromPayload(payload, ov) {
+            const rhr = (payload && payload.rhr) || {};
+            const warn = (payload && payload.warn) || {};
+            let temp = '--';
+            let humidity = '--';
+            let conditionKey = 'default';
+            let conditionLabel = '—';
+
+            if (rhr.temperature && rhr.temperature.data) {
+                const hko = rhr.temperature.data.find(d => d.place === '香港天文台') || rhr.temperature.data[0];
+                if (hko) temp = hko.value;
+            }
+            if (rhr.humidity && rhr.humidity.data && rhr.humidity.data[0]) {
+                humidity = rhr.humidity.data[0].value;
+            }
+            const iconCode = (rhr.icon && rhr.icon[0]) ? rhr.icon[0] : null;
+            if (iconCode && HKO_ICON_TO_KEY[iconCode]) {
+                conditionKey = HKO_ICON_TO_KEY[iconCode];
+            }
+            const labelMap = {
+                sunny: '天晴', cloudy: '多雲', overcast: '陰', rain: '雨', heavy_rain: '大雨', thunder: '雷暴', fog: '霧', default: '天氣'
+            };
+            conditionLabel = labelMap[conditionKey] || '天氣';
+
+            // overrides
+            if (ov) {
+                if (ov.condition) {
+                    conditionKey = ov.condition;
+                    conditionLabel = labelMap[ov.condition] || ov.condition;
+                }
+                if (ov.temp !== undefined && ov.temp !== '' && ov.temp !== null) temp = ov.temp;
+                if (ov.humidity !== undefined && ov.humidity !== '' && ov.humidity !== null) humidity = ov.humidity;
+            }
+
+            document.getElementById('weather-icon') && (document.getElementById('weather-icon').textContent = WEATHER_ICON_MAP[conditionKey] || WEATHER_ICON_MAP.default);
+            document.getElementById('weather-condition') && (document.getElementById('weather-condition').textContent = conditionLabel);
+            document.getElementById('weather-temp') && (document.getElementById('weather-temp').textContent = temp + '°C');
+            document.getElementById('weather-humidity') && (document.getElementById('weather-humidity').textContent = '濕度 ' + humidity + '%');
+
+            // warnings
+            const severeLabels = [];
+            let forceRedPage = false;
+            const warnContainer = document.getElementById('weather-warnings');
+            if (warnContainer) warnContainer.innerHTML = '';
+
+            function addBadge(text, severe) {
+                if (!warnContainer) return;
+                const span = document.createElement('span');
+                span.className = severe
+                    ? 'text-[10px] font-bold px-2 py-0.5 rounded-full bg-red-500/25 text-red-200 border border-red-500/40'
+                    : 'text-[10px] font-bold px-2 py-0.5 rounded-full bg-iosOrange/20 text-iosOrange border border-iosOrange/30';
+                span.textContent = text;
+                warnContainer.appendChild(span);
+            }
+
+            // Real warnsum keys e.g. WRAIN, WTCSGNL
+            const w = warn || {};
+            if (w.WRAIN) {
+                const code = (w.WRAIN.code || w.WRAIN.actionCode || '').toUpperCase();
+                const name = w.WRAIN.name || w.WRAIN.type || '暴雨警告';
+                if (code.includes('BLACK') || (name && name.includes('黑色'))) {
+                    severeLabels.push('黑色暴雨警告信號');
+                    forceRedPage = true;
+                    addBadge('黑雨', true);
+                } else if (code.includes('RED') || (name && name.includes('紅色'))) {
+                    severeLabels.push('紅色暴雨警告信號');
+                    addBadge('紅雨', true);
+                } else if (code.includes('AMBER') || (name && name.includes('黃色'))) {
+                    addBadge('黃雨', false);
+                } else {
+                    addBadge(name || '暴雨', false);
+                }
+            }
+            if (w.WTCSGNL) {
+                const code = (w.WTCSGNL.code || '').toUpperCase();
+                const name = w.WTCSGNL.name || '';
+                if (code.includes('TC10') || name.includes('十號')) {
+                    severeLabels.push('十號熱帶氣旋警告信號');
+                    forceRedPage = true;
+                    addBadge('十號風球', true);
+                } else if (code.includes('TC9') || name.includes('九號')) {
+                    severeLabels.push('九號熱帶氣旋警告信號');
+                    forceRedPage = true;
+                    addBadge('九號風球', true);
+                } else if (code.includes('TC8') || name.includes('八號')) {
+                    severeLabels.push('八號熱帶氣旋警告信號');
+                    addBadge('八號風球', true);
+                } else if (code.includes('TC3') || name.includes('三號')) {
+                    addBadge('三號風球', false);
+                } else if (code.includes('TC1') || name.includes('一號')) {
+                    addBadge('一號風球', false);
+                } else {
+                    addBadge(name || '熱帶氣旋', false);
+                }
+            }
+            // other common
+            ['WFIRE', 'WHOT', 'WCOLD', 'WTS', 'WFROST', 'WL', 'WTMW', 'WMSGNL'].forEach(k => {
+                if (w[k] && w[k].name) addBadge(w[k].name, false);
+            });
+
+            // Dev overrides for warnings
+            if (ov) {
+                if (ov.rainBlack) { severeLabels.push('黑色暴雨警告信號'); forceRedPage = true; addBadge('黑雨', true); }
+                if (ov.rainRed) { severeLabels.push('紅色暴雨警告信號'); addBadge('紅雨', true); }
+                if (ov.tc10) { severeLabels.push('十號熱帶氣旋警告信號'); forceRedPage = true; addBadge('十號風球', true); }
+                if (ov.tc9) { severeLabels.push('九號熱帶氣旋警告信號'); forceRedPage = true; addBadge('九號風球', true); }
+                if (ov.tc8) { severeLabels.push('八號熱帶氣旋警告信號'); addBadge('八號風球', true); }
+            }
+
+            // unique
+            const uniq = [...new Set(severeLabels)];
+            if (payload) payload._severeLabels = uniq;
+
+            applySevereWeatherTheme(forceRedPage);
+
+            if (uniq.length && !weatherWarnDismissedSession) {
+                showWeatherWarnModal(uniq);
+            } else if (uniq.length && weatherWarnDismissedSession) {
+                const banner = document.getElementById('weather-alert-banner');
+                const text = document.getElementById('weather-alert-text');
+                if (banner && text) {
+                    text.textContent = uniq.join(' · ');
+                    banner.classList.remove('hidden');
+                }
+            } else {
+                document.getElementById('weather-alert-banner')?.classList.add('hidden');
+            }
+        }
+
+        // Extend switchTab for dev
+        const _origSwitchTab = typeof switchTab === 'function' ? switchTab : null;
+        function switchTab(tabName) {
+            const tabs = ['home', 'bus', 'mtr', 'games', 'settings', 'dev'];
+            tabs.forEach(tab => {
+                const el = document.getElementById(`tab-${tab}`);
+                const nav = document.getElementById(`nav-${tab}`);
+                if (!el) return;
+                if (tab === tabName) {
+                    el.classList.remove('hidden');
+                    if (nav) { nav.classList.add('text-iosBlue'); nav.classList.remove('text-iosGray'); }
+                } else {
+                    el.classList.add('hidden');
+                    if (nav) { nav.classList.remove('text-iosBlue'); nav.classList.add('text-iosGray'); }
+                }
+            });
+            if (tabName === 'bus' && typeof renderBusTab === 'function') renderBusTab();
+            if (tabName === 'mtr' && typeof renderMtrTab === 'function') renderMtrTab();
+            if (tabName === 'settings' && typeof refreshSettingsInstallVisibility === 'function') refreshSettingsInstallVisibility();
+            if (tabName === 'dev') {
+                const ov = getDevWeatherOverrides() || {};
+                const set = (id, v) => { const el = document.getElementById(id); if (el) el.value = v ?? ''; };
+                const chk = (id, v) => { const el = document.getElementById(id); if (el) el.checked = !!v; };
+                set('dev-weather-condition', ov.condition || '');
+                set('dev-weather-temp', ov.temp);
+                set('dev-weather-humidity', ov.humidity);
+                chk('dev-warn-rain-red', ov.rainRed);
+                chk('dev-warn-rain-black', ov.rainBlack);
+                chk('dev-warn-tc8', ov.tc8);
+                chk('dev-warn-tc9', ov.tc9);
+                chk('dev-warn-tc10', ov.tc10);
+            }
+        }
+
+        // MTR Bus ETA (POST)
+        async function fetchMtrBusEta(routeName, lang) {
+            try {
+                const res = await fetch('https://rt.data.gov.hk/v1/transport/mtr/bus/getSchedule', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ language: lang === 'en' ? 'en' : 'zh', routeName: routeName })
+                });
+                return await res.json();
+            } catch (e) { return null; }
+        }
+
+        // GMB ETA helpers (data.etagmb.gov.hk)
+        async function fetchGmbStopEta(stopId) {
+            try {
+                const res = await fetch(`https://data.etagmb.gov.hk/eta/stop/${encodeURIComponent(stopId)}`);
+                return await res.json();
+            } catch (e) { return null; }
+        }
+        async function fetchGmbRouteStopEta(routeId, routeSeq, stopSeq) {
+            try {
+                const res = await fetch(`https://data.etagmb.gov.hk/eta/route-stop/${routeId}/${routeSeq}/${stopSeq}`);
+                return await res.json();
+            } catch (e) { return null; }
+        }
+
+        // Patch into existing loadModalEta if present — extend by redefining after
+        const _prevLoadModalEta = typeof loadModalEta === 'function' ? loadModalEta : null;
+        // We hook after original definition; user file already has loadModalEta — we augment via wrapper on open
+
+        // Init weather + dev nav on load
+        document.addEventListener('DOMContentLoaded', () => {
+            if (devModeActive) document.getElementById('nav-dev')?.classList.remove('hidden');
+            fetchAndRenderWeather();
+            setInterval(() => fetchAndRenderWeather(), 5 * 60 * 1000);
+        });
+        // Also kick immediately if DOM already ready
+        if (document.readyState !== 'loading') {
+            if (devModeActive) document.getElementById('nav-dev')?.classList.remove('hidden');
+            fetchAndRenderWeather();
         }
     </script>
 </body>
